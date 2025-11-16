@@ -5,6 +5,7 @@ Supports both SQLite (local development) and PostgreSQL (production/Supabase).
 """
 import os
 import sqlite3
+import socket
 
 # Try to import PostgreSQL support
 try:
@@ -38,9 +39,24 @@ def get_db_connection():
         # This works better with Supabase + Render combination
         url = url.replace(':5432/', ':6543/')
         
-        # Add SSL requirement and set options to prefer IPv4
+        # Extract hostname and resolve to IPv4 only
+        # This prevents psycopg2 from attempting IPv6 connections
+        import re
+        match = re.search(r'@([^:]+):', url)
+        if match:
+            hostname = match.group(1)
+            try:
+                # Force IPv4 resolution
+                ipv4_address = socket.getaddrinfo(hostname, None, socket.AF_INET)[0][4][0]
+                # Replace hostname with IPv4 address
+                url = url.replace(f'@{hostname}:', f'@{ipv4_address}:')
+            except socket.gaierror:
+                # If resolution fails, fall back to original hostname
+                pass
+        
+        # Add SSL requirement
         if '?' in url:
-            url += '&sslmode=require&options=-c%20client_ip_mode=ipv4'
+            url += '&sslmode=require'
         else:
             url += '?sslmode=require'
         
