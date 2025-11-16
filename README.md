@@ -123,6 +123,20 @@ This project can be deployed as a simple Web Service on Render. Minimal steps:
 
 5. If you need to process large CSV files, add a persistent disk to the service and upload your CSVs there. Update `build_db.py` or the `DATA_DIRECTORY` in `client_data.py` to point to that disk so the DB can be built during deployment.
 
+  Quick example: download `data.db` from a private S3 bucket during the build
+
+  1. Set these Environment variables on Render (Environment → Environment Variables):
+	  - AWS_ACCESS_KEY_ID
+	  - AWS_SECRET_ACCESS_KEY
+	  - AWS_DEFAULT_REGION
+	  - Optionally: DATA_DIRECTORY (for where the DB will be written)
+  2. In Render Build Command, download the DB into the `DATA_DIRECTORY` and build the DB if needed:
+
+	  pip install -r requirements.txt
+	  ./scripts/fetch_db_from_s3.sh s3://my-bucket/path/to/data.db || true
+	  python build_db.py || true
+
+  This will keep your `data.db` private (it is stored in S3) and the instance will download it during each deploy.
 6. Optional: use `render.yaml` included in the repository to declare the service. After the first deploy, you can edit the service settings in the Render dashboard.
 
 Note that the `Data/` directory is ignored in the public repository by default to avoid committing large/sensitive CSVs. For a persistent copy, use a disk, or store the CSVs in a private object store and download during the build phase.
