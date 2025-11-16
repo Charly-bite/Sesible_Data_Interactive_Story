@@ -90,6 +90,22 @@ Optional follow-ups
 - Add a `LICENSE` file (MIT recommended) if you want to open-source the repository. This README does not change project licensing.
 - Add a simple GitHub Actions workflow to run tests and build the DB as a sanity check.
 
+Large files, DB and Git LFS
+
+- If your `data.db` is large (for example > 100MB), pushing directly to GitHub will fail. We prepared the repository for Git LFS by adding `.gitattributes`; to upload the DB with LFS do the following locally:
+
+	1. Install Git LFS: https://git-lfs.github.com
+	2. Initialize LFS in your repo: `git lfs install`
+	3. Track the DB file: `git lfs track "data.db"` (this updates `.gitattributes`)
+	4. Stage LFS files: `git add .gitattributes data.db`
+	5. Commit: `git commit -m "Add data.db via Git LFS"`
+	6. Push: `git push origin main` — the DB will be uploaded to LFS storage instead of Git objects
+
+- Caveat: GitHub applies storage/transfer quotas to LFS; large (>1GB) files may require a paid plan. If you need larger storage or don’t want to use LFS, consider one of the following:
+	- Upload `data.db` to Render's persistent disk (for production/deployment) and do not commit it to the repository.
+	- Upload `data.db` as a GitHub release asset and attach a small sample DB in the repository for CI/tests.
+	- Use an object store (S3 or similar) and download the DB during the build step in Render.
+
 Deploying on Render.com
 
 This project can be deployed as a simple Web Service on Render. Minimal steps:
