@@ -7,7 +7,7 @@ EXPECTED_LABELS = [
     "INT", "EXT", "COLONIA", "CP", "E", "D", "M", "S", "L", "MZA",
     "CONSEC", "CRED", "FOLIO", "NAC", "CURP"
 ]
-DATA_DIRECTORY = "./Data"
+DATA_DIRECTORY = os.environ.get('DATA_DIRECTORY', './Data')
 
 # --- Functions ---
 

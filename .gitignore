@@ -19,10 +19,10 @@ build/
 htmlcov/
 
 # Local DB
-# Note: We allow `data.db` in the repository for convenience (committed DB file).
-# If you prefer to avoid storing a copy of the DB, remove the following exception
-# and uncomment the `data.db` entry.
-#data.db
+# Note: We keep `data.db` out of the repository to avoid storing sensitive data.
+# If you need a committed DB for demo purposes consider Git LFS or releasing it as
+# a GitHub release asset. To allow local DB copies, remove the following entry.
+data.db
 
 # Raw data CSV files (local only)
 Data/
