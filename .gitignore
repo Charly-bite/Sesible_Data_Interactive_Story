@@ -19,7 +19,10 @@ build/
 htmlcov/
 
 # Local DB
-data.db
+# Note: We allow `data.db` in the repository for convenience (committed DB file).
+# If you prefer to avoid storing a copy of the DB, remove the following exception
+# and uncomment the `data.db` entry.
+#data.db
 
 # Raw data CSV files (local only)
 Data/
