@@ -33,6 +33,17 @@ def get_db_connection():
         if url.startswith('postgres://'):
             url = url.replace('postgres://', 'postgresql://', 1)
         
+        # Force IPv4 for Render compatibility (free tier doesn't support IPv6)
+        # Also use connection pooling port (6543) instead of direct port (5432)
+        # This works better with Supabase + Render combination
+        url = url.replace(':5432/', ':6543/')
+        
+        # Add SSL requirement and set options to prefer IPv4
+        if '?' in url:
+            url += '&sslmode=require&options=-c%20client_ip_mode=ipv4'
+        else:
+            url += '?sslmode=require'
+        
         conn = psycopg2.connect(url)
         return conn, 'postgres'
     else:
