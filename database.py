@@ -27,68 +27,23 @@ def get_db_connection():
     """
     Return a database connection.
     Uses PostgreSQL if DATABASE_URL is set, otherwise falls back to SQLite.
+    Optimized for Neon.tech with IPv4 support.
     """
     if USE_POSTGRES:
-        # Parse DATABASE_URL manually to handle special characters in password
-        # Format: postgresql://user:password@host:port/database
-        import re
-        
+        # Neon.tech connection string format
+        # postgresql://user:password@host:port/database
         url = DATABASE_URL
+        
+        # Handle postgres:// prefix (convert to postgresql://)
         if url.startswith('postgres://'):
             url = url.replace('postgres://', 'postgresql://', 1)
         
-        # Manual parsing to handle passwords with special characters like #
-        # Pattern: postgresql://username:password@hostname:port/database
-        pattern = r'postgresql://([^:]+):([^@]+)@([^:]+):(\d+)/(.+?)(?:\?|$)'
-        match = re.match(pattern, url)
-        
-        if not match:
-            raise ValueError(f"Invalid DATABASE_URL format: {url}")
-        
-        username = match.group(1)
-        password = match.group(2)
-        hostname = match.group(3)
-        port = int(match.group(4))
-        database = match.group(5)
-        
-        # Force port 6543 (Session Pooler) for IPv4 compatibility if using 5432
-        if port == 5432:
-            port = 6543
-            print(f"✓ Switched from port 5432 to 6543 (Session Pooler)")
-        
-        # Resolve hostname to IPv4 address BEFORE connecting
-        ipv4_host = hostname  # Default fallback
-        
-        try:
-            # Get IPv4 address only (AF_INET)
-            addr_info = socket.getaddrinfo(
-                hostname, 
-                None,  # Don't filter by port during DNS lookup
-                socket.AF_INET,  # Force IPv4 only
-                socket.SOCK_STREAM
-            )
-            # Use the first IPv4 address found
-            if addr_info and len(addr_info) > 0:
-                ipv4_host = addr_info[0][4][0]
-                print(f"✓ Resolved {hostname} to IPv4: {ipv4_host}")
-            else:
-                print(f"⚠ No IPv4 address found for {hostname}, using hostname")
-        except Exception as e:
-            print(f"⚠ IPv4 resolution failed for {hostname}: {type(e).__name__}, using hostname")
-        
-        # Connect using individual parameters with resolved IPv4
-        conn = psycopg2.connect(
-            host=ipv4_host,
-            port=port,
-            database=database,
-            user=username,
-            password=password,
-            sslmode='require',
-            connect_timeout=10
-        )
+        # Neon provides IPv4 addresses, so no special handling needed
+        # Just connect with SSL required
+        conn = psycopg2.connect(url, sslmode='require', connect_timeout=10)
         return conn, 'postgres'
     else:
-        # Fallback to SQLite
+        # Fallback to SQLite for local development
         conn = sqlite3.connect(SQLITE_DB_PATH, check_same_thread=False)
         conn.row_factory = sqlite3.Row
         return conn, 'sqlite'
