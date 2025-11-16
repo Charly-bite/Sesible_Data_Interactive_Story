@@ -29,38 +29,63 @@ def get_db_connection():
     Uses PostgreSQL if DATABASE_URL is set, otherwise falls back to SQLite.
     """
     if USE_POSTGRES:
-        # Fix Render's postgres:// prefix issue
+        # Parse DATABASE_URL manually to handle special characters in password
+        # Format: postgresql://user:password@host:port/database
+        import re
+        
         url = DATABASE_URL
         if url.startswith('postgres://'):
             url = url.replace('postgres://', 'postgresql://', 1)
         
-        # Force IPv4 for Render compatibility (free tier doesn't support IPv6)
-        # Also use connection pooling port (6543) instead of direct port (5432)
-        # This works better with Supabase + Render combination
-        url = url.replace(':5432/', ':6543/')
+        # Manual parsing to handle passwords with special characters like #
+        # Pattern: postgresql://username:password@hostname:port/database
+        pattern = r'postgresql://([^:]+):([^@]+)@([^:]+):(\d+)/(.+?)(?:\?|$)'
+        match = re.match(pattern, url)
         
-        # Extract hostname and resolve to IPv4 only
-        # This prevents psycopg2 from attempting IPv6 connections
-        import re
-        match = re.search(r'@([^:]+):', url)
-        if match:
-            hostname = match.group(1)
-            try:
-                # Force IPv4 resolution
-                ipv4_address = socket.getaddrinfo(hostname, None, socket.AF_INET)[0][4][0]
-                # Replace hostname with IPv4 address
-                url = url.replace(f'@{hostname}:', f'@{ipv4_address}:')
-            except socket.gaierror:
-                # If resolution fails, fall back to original hostname
-                pass
+        if not match:
+            raise ValueError(f"Invalid DATABASE_URL format: {url}")
         
-        # Add SSL requirement
-        if '?' in url:
-            url += '&sslmode=require'
-        else:
-            url += '?sslmode=require'
+        username = match.group(1)
+        password = match.group(2)
+        hostname = match.group(3)
+        port = int(match.group(4))
+        database = match.group(5)
         
-        conn = psycopg2.connect(url)
+        # Force port 6543 (Session Pooler) for IPv4 compatibility if using 5432
+        if port == 5432:
+            port = 6543
+            print(f"✓ Switched from port 5432 to 6543 (Session Pooler)")
+        
+        # Resolve hostname to IPv4 address BEFORE connecting
+        ipv4_host = hostname  # Default fallback
+        
+        try:
+            # Get IPv4 address only (AF_INET)
+            addr_info = socket.getaddrinfo(
+                hostname, 
+                None,  # Don't filter by port during DNS lookup
+                socket.AF_INET,  # Force IPv4 only
+                socket.SOCK_STREAM
+            )
+            # Use the first IPv4 address found
+            if addr_info and len(addr_info) > 0:
+                ipv4_host = addr_info[0][4][0]
+                print(f"✓ Resolved {hostname} to IPv4: {ipv4_host}")
+            else:
+                print(f"⚠ No IPv4 address found for {hostname}, using hostname")
+        except Exception as e:
+            print(f"⚠ IPv4 resolution failed for {hostname}: {type(e).__name__}, using hostname")
+        
+        # Connect using individual parameters with resolved IPv4
+        conn = psycopg2.connect(
+            host=ipv4_host,
+            port=port,
+            database=database,
+            user=username,
+            password=password,
+            sslmode='require',
+            connect_timeout=10
+        )
         return conn, 'postgres'
     else:
         # Fallback to SQLite
