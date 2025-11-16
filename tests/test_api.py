@@ -28,6 +28,7 @@ def test_home():
     # Some test runners do not preserve session cookies across requests; ensure session is set
     with client.session_transaction() as sess:
         sess['user'] = api.AUTH_USER
+        sess['page_token'] = 'test-token'
     resp = client.get('/')
     assert resp.status_code == 200
     # Home returns HTML; check for a known string in the template
@@ -44,6 +45,7 @@ def test_search_single(monkeypatch):
     client.post('/login', data={'username': api.AUTH_USER, 'password': api.AUTH_PASSWORD}, follow_redirects=True)
     with client.session_transaction() as sess:
         sess['user'] = api.AUTH_USER
+        sess['page_token'] = 'test-token'
 
     payload = {"type": "single", "label": "NOMBRE", "value": "juan"}
     resp = client.post('/api/search', data=json.dumps(payload), content_type='application/json')
@@ -61,6 +63,7 @@ def test_search_paterno_or_materno(monkeypatch):
     client.post('/login', data={'username': api.AUTH_USER, 'password': api.AUTH_PASSWORD}, follow_redirects=True)
     with client.session_transaction() as sess:
         sess['user'] = api.AUTH_USER
+        sess['page_token'] = 'test-token'
 
     payload = {"type": "paterno_or_materno", "term": "Perez"}
     resp = client.post('/api/search', data=json.dumps(payload), content_type='application/json')
@@ -78,6 +81,7 @@ def test_search_full_name(monkeypatch):
     client.post('/login', data={'username': api.AUTH_USER, 'password': api.AUTH_PASSWORD}, follow_redirects=True)
     with client.session_transaction() as sess:
         sess['user'] = api.AUTH_USER
+        sess['page_token'] = 'test-token'
 
     payload = {"type": "full_name", "nombre": "Juan", "paterno": "Perez", "materno": "Lopez"}
     resp = client.post('/api/search', data=json.dumps(payload), content_type='application/json')
