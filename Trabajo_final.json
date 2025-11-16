@@ -1,0 +1,140 @@
+{
+  "courseInfo": {
+    "courseName": "Storytelling I - Híbrido",
+    "courseCode": "V2170",
+    "section": "Proyecto Final"
+  },
+  "activity": {
+    "title": "Trabajo final integrador_Mi storytelling",
+    "subtitle": "Producto final integrador: Crea tu propio storytelling",
+    "dueDate": "2025-11-24T23:59:00",
+    "objective": "Crear un storytelling a partir de los aprendizajes adquiridos a lo largo de este curso, a través de técnicas narrativas como worldbuilding, identidad visual, tono, microcopy y llamada a la acción para comunicar de manera efectiva un concepto, marca, producto o experiencia digital.",
+    "introduction": "Ha llegado el momento de poner en práctica todo lo que hemos aprendido. Tu tarea es diseñar un storytelling usando los elementos, recursos y conceptos que hemos explorado durante el curso.",
+    "teamwork": "Este proyecto podrá realizarse de manera individual o en equipos de máximo 4 personas.",
+    "projectOptions": {
+      "instruction": "Define el tipo de storytelling que quieres desarrollar:",
+      "options": [
+        {
+          "id": 1,
+          "name": "Storytelling pedagógico",
+          "description": "Céntrate en explicar un concepto o idea de manera clara y atractiva.",
+          "examples": [
+            "Para un estudiante de Inteligencia Financiera, narrar el concepto de interés compuesto usando gráficos animados, analogías o un mini video explicativo.",
+            "En carreras de biomedicina, ilustrar el proceso de una vacuna mediante un storytelling visual paso a paso."
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Branding storytelling",
+          "description": "Crea un mundo para una marca, producto o servicio. Se trata de transmitir identidad y personalidad a través de colores, tipografía, tono de voz, símbolos y estilo visual.",
+          "examples": [
+            "Una app de meditación que comunique calma y bienestar.",
+            "Una marca de ropa urbana que transmita energía, rebeldía y creatividad."
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Storytelling digital y redes sociales",
+          "description": "Diseña contenido para TikTok, Instagram o YouTube, enfocado en comunicar un concepto, lección o experiencia relacionada con tu carrera. Piensa en formatos cortos, atractivos y dinámicos.",
+          "examples": [
+            "Explicaciones rápidas con ejemplos visuales.",
+            "Micro-historias que enganchen desde los primeros segundos."
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Escape room digital",
+          "description": "Diseña un escape room virtual que transmita un concepto, idea o identidad de marca mediante acertijos, pistas y narrativa interactiva. Esto permite que los usuarios exploren un mundo mientras aprenden o experimentan un mensaje.",
+          "examples": [
+            "Ejemplo de inspiración: Escape Game “Crimen en el edificio” en Genially."
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Storytelling transmedia",
+          "description": "Crea un relato o experiencia que se despliegue en varios formatos o plataformas.",
+          "examples": [
+            "Una serie de posts en Instagram combinada con videos cortos en TikTok y un mini sitio web que refuerce el mismo concepto o marca."
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Storytelling para experiencia de usuario web",
+          "description": "Diseñar la interfaz de usuario de una página web o app, con un paquete de varias pantallas, que sea coherente a través del diseño visual y la experiencia del usuario."
+        }
+      ]
+    },
+    "strategicObjective": {
+      "instruction": "Decide cuál va a ser tu objetivo estratégico:",
+      "description": "Piensa primero en qué quieres comunicar y a quién va dirigido, y luego elige los elementos de storytelling más adecuados: paleta de colores, tipografía, tono, símbolos, ritmo narrativo y medios de difusión. Decide cuál de los objetivos quieres alcanzar con tu storytelling."
+    },
+    "deliverableRequirements": {
+      "format": {
+        "title": "Formato",
+        "details": "Puede ser digital, en la herramienta que prefieras: Canva, Genially, PowerPoint interactivo, video corto, TikTok, o cualquier otro soporte multimedia.",
+        "note": "No se aceptan guiones ni borradores: el storytelling debe estar desarrollado, terminado y listo para presentar."
+      },
+      "includes": {
+        "title": "Lo que debe incluir",
+        "items": [
+          {
+            "name": "Gancho narrativo",
+            "description": "Debe captar la atención desde el inicio y generar interés."
+          },
+          {
+            "name": "Worldbuilding claro y consistente",
+            "details": [
+              "Paleta de colores coherente.",
+              "Tipografía consistente.",
+              "Estilo visual uniforme."
+            ]
+          },
+          {
+            "name": "Llamada a la acción (CTA)",
+            "description": "Al menos un CTA que invite a interactuar o reflexionar."
+          },
+          {
+            "name": "Microcopy",
+            "description": "Textos breves y efectivos que guíen la experiencia."
+          }
+        ]
+      },
+      "recommended": {
+        "title": "Otros elementos recomendables",
+        "items": [
+          "Símbolos o metáforas visuales.",
+          "Ritmo narrativo lógico.",
+          "Sonido o música (opcional).",
+          "Interactividad (si el formato lo permite)."
+        ]
+      }
+    },
+    "evaluationCriteria": [
+      {
+        "criterion": "Creatividad y originalidad",
+        "weight": "25%",
+        "description": "Capacidad de generar un concepto interesante."
+      },
+      {
+        "criterion": "Coherencia del worldbuilding",
+        "weight": "25%",
+        "description": "Colores, tipografía y tono consistentes."
+      },
+      {
+        "criterion": "Claridad y efectividad narrativa",
+        "weight": "20%",
+        "description": "El mensaje se comunica de forma clara."
+      },
+      {
+        "criterion": "Uso de elementos estratégicos",
+        "weight": "15%",
+        "description": "Inclusión de gancho, microcopy, CTA, etc."
+      },
+      {
+        "criterion": "Presentación y formato",
+        "weight": "15%",
+        "description": "Calidad visual y técnica del producto final."
+      }
+    ]
+  }
+}

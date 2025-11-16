@@ -1,0 +1,34 @@
+* { box-sizing: border-box; }
+body { font-family: 'Lora', serif; margin: 0; color: #222; background: #fff; }
+.container { max-width: 1100px; margin: 24px auto; padding: 18px; }
+header.cover { display: grid; grid-template-columns: 1fr 320px; gap: 18px; padding: 24px; border-radius: 8px; align-items: center; background: linear-gradient(90deg,#F7F2E7 0%, #fff 100%); }
+.cover-left h1 { margin: 0; font-size: 48px; font-family: 'Montserrat', sans-serif; font-weight: 900; color: #5A6D9F; }
+.cover-left h2 { margin: 6px 0 12px; font-size: 20px; color: #313131; font-weight: 600; }
+.cover-left .author { margin: 0; color: #666; }
+.button { background: #5A6D9F; color: #fff; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-family: 'Montserrat', sans-serif; font-weight:700; }
+.button:hover { opacity: 0.9; }
+.cover-right .cover-image { height: 160px; background: #26292D; border-radius: 6px; display:flex; align-items:center; justify-content:center; color:#EDE6DB; font-size:14px; padding:10px; }
+/* Ensure images inside cover-image fit and retain border radius */
+.cover-right .cover-image img { /* fit the logo fully, avoid cropping */
+	width: auto;
+	height: auto;
+	max-width: 60%;
+	max-height: 60%;
+	object-fit: contain;
+	display: block;
+	border-radius: inherit;
+	background-color: transparent;
+}
+section.slide { padding: 20px; margin-top: 16px; border-radius: 8px; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+.slide h3 { margin-top: 0; font-family: 'Montserrat', sans-serif; color: #5A6D9F; }
+.palette { display:flex; gap: 12px; margin: 10px 0; }
+.swatch { width: 110px; height: 70px; border-radius: 6px; display:flex; align-items:flex-end; padding:6px; color:white; font-family: 'Montserrat', sans-serif; font-weight:700; font-size:12px; box-shadow: 0 1px 0 rgba(0,0,0,0.05) inset; }
+.swatch.primary { background:#5A6D9F; }
+.swatch.accent { background:#E77C6C; }
+.swatch.soft { background:#F7F2E7; color:#222; }
+.swatch.neutral { background:#313131; }
+footer.credits { margin-top: 18px; color: #666; font-size: 13px; }
+.button { display:inline-block; padding:8px 12px; background:#5A6D9F; color:#fff; border-radius:6px; text-decoration:none; font-weight:700; }
+.button:hover { background:#46567D; }
+ul { margin: 6px 0 0; }
+@media print { body { background: #fff; } .container { margin: 0; width: auto; } header.cover, .slide { page-break-inside: avoid; } }

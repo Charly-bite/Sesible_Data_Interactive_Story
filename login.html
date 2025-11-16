@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Acceso - Datos Sensibles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#1a1a1a;--muted:#B7B1A8;--accent:#BFA272;--card:#0f1520}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Lora',serif;background:linear-gradient(180deg,rgba(10,10,10,0.6),rgba(10,10,10,0.9)),var(--bg);color:#EDE6DB;min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .login-wrap{max-width:980px;width:100%;padding:2rem;display:grid;grid-template-columns:1fr 420px;gap:2rem;align-items:center}
+    .brand{padding:1.25rem}
+    .brand img{max-width:100%;display:block;filter:drop-shadow(0 8px 32px rgba(191,162,114,0.08))}
+    .hero-copy h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.2rem;color:var(--accent);margin-bottom:.5rem}
+    .hero-copy p{color:var(--muted);margin-bottom:1rem}
+    .card{background:var(--card);border-radius:12px;padding:1.35rem;border:1px solid rgba(191,162,114,0.12);box-shadow:0 12px 36px rgba(0,0,0,0.6)}
+    form label{display:block;color:var(--accent);font-weight:700;margin-bottom:6px;font-family:'Montserrat',sans-serif}
+    .form-row{margin-bottom:0.85rem}
+  input[type=text],input[type=password]{width:100%;padding:.65rem .9rem;border-radius:10px;border:1px solid rgba(191,162,114,0.12);background:#12141a;color:#EDE6DB}
+  .password-row{display:flex;gap:0.5rem;align-items:center}
+  .password-row input{flex:1}
+  .pw-toggle{background:transparent;border:1px solid rgba(191,162,114,0.08);color:var(--muted);padding:.45rem .6rem;border-radius:8px;cursor:pointer;font-weight:700}
+    .btn{background:var(--accent);color:#111;border:none;padding:.75rem 1.25rem;border-radius:999px;cursor:pointer;font-weight:700}
+    .helper{color:var(--muted);font-size:.95rem;margin-top:.5rem}
+    .error{background:#3b1a1a;color:#ffd6d6;padding:.6rem .8rem;border-radius:8px;margin-bottom:0.9rem}
+    @media(max-width:880px){.login-wrap{grid-template-columns:1fr;padding:1rem}.brand{order:2}}
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="brand">
+      <img src="moodboard/images/CUGDL_LOGO2.png" alt="CUGDL Logo">
+      <div class="hero-copy" style="margin-top:1rem">
+        <h1>Bienvenido a Datos Sensibles</h1>
+        <p>Acceso restringido. Por favor inicia sesión para continuar.</p>
+        <p class="helper">Al acceder te comprometes a no divulgar información sensible.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div id="errorBox" style="display:none" class="error">Usuario o contraseña incorrectos.</div>
+        <form id="loginForm" method="post" action="/login">
+          <div class="form-row">
+            <label for="username">Usuario</label>
+            <input id="username" name="username" type="text" required placeholder="Usuario">
+          </div>
+          <div class="form-row">
+            <label for="password">Contraseña</label>
+            <div class="password-row">
+              <input id="password" name="password" type="password" required placeholder="Contraseña">
+              <button id="togglePassword" type="button" class="pw-toggle" aria-pressed="false">Mostrar</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:.6rem">
+            <button class="btn" type="submit">Entrar</button>
+            <div style="color:var(--muted);font-size:.9rem">Usuario: <strong>Storytelling</strong></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Show error when ?error=1
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('error')) {
+      document.getElementById('errorBox').style.display = 'block';
+    }
+    // Pre-fill username for convenience
+    document.getElementById('username').value = 'Storytelling';
+    // Toggle password visibility
+    (function(){
+      const pwd = document.getElementById('password');
+      const btn = document.getElementById('togglePassword');
+      if (!pwd || !btn) return;
+      btn.addEventListener('click', () => {
+        if (pwd.type === 'password') {
+          pwd.type = 'text';
+          btn.textContent = 'Ocultar';
+          btn.setAttribute('aria-pressed','true');
+        } else {
+          pwd.type = 'password';
+          btn.textContent = 'Mostrar';
+          btn.setAttribute('aria-pressed','false');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

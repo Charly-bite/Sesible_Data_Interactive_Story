@@ -1,0 +1,15 @@
+{
+  "project":"Información sensible",
+  "author":"Carlos A. Aceves",
+  "slides":[
+  {"id":1,"title":"Portada","items":["Nombre del proyecto: Información sensible","Autor: Carlos A. Aceves","Imagen: retrato emotivo o paisaje íntimo"]},
+    {"id":2,"title":"Tipo de Storytelling","items":["Microdocumental + redes","Formato principal: Reels/shorts + soporte web"]},
+    {"id":3,"title":"Objetivo estratégico","items":["Inspirar empatía","Motivar pequeñas acciones comunitarias"]},
+    {"id":4,"title":"Narrativa","items":["Tono: reflexivo, esperanzador","Estructura: 3 episodios cortos, close-ups y testimonios"]},
+    {"id":5,"title":"Estética y paleta","items":["Paleta: #5A6D9F, #E77C6C, #F7F2E7, #313131","Tipografías: Montserrat (titulares), Lora (cuerpo)"]},
+    {"id":6,"title":"Audiencia","items":["18-35, interesados en cultura, temas sociales, comunidad"]},
+    {"id":7,"title":"Formato y soporte","items":["Reels 60s, minisitio con testimonios, PDF guía descargable"]},
+    {"id":8,"title":"Referencias visuales","items":["Unsplash keywords: portrait intimate, hands close up, documentary photography"]},
+    {"id":9,"title":"Reflexión final","items":["Coherencia entre tono, formato y paleta; CTA simple"]}
+  ]
+}

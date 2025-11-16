@@ -1,0 +1,49 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+.env
+.venv
+venv/
+
+# pip / poetry / pipenv
+*.egg-info/
+dist/
+build/
+
+# pytest
+.pytest_cache/
+htmlcov/
+
+# Local DB
+data.db
+
+# Raw data CSV files (local only)
+Data/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/editor
+.vscode/
+*.swp
+
+# Node modules for any frontend tooling
+node_modules/
+
+# Coverage
+.coverage
+coverage.xml
+
+# Logs
+*.log
+
+# macOS
+.TemporaryItems
+
+# Ignore secret/auth config in development
+auth.json

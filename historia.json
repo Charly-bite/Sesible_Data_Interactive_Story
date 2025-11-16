@@ -1,0 +1,14 @@
+{
+  "event": "Mexican Voter Data Leak",
+  "date": "April 2016",
+  "summary": "The personal data of 93.4 million Mexican voters was found exposed on a public Amazon server, originating from a copy of the electoral roll that the National Electoral Institute (INE) provided to the Movimiento Ciudadano political party.",
+  "protagonist": {
+    "name": "National Electoral Institute (INE)",
+    "action": "Crisis Communication using 'Framing'",
+    "narrative": "The INE publicly blamed the political party for negligence, framing the incident as an isolated mistake rather than a systemic security failure on its own part."
+  },
+  "outcome": {
+    "short_term": "The INE successfully deflected blame, mitigating immediate reputational damage.",
+    "long_term": "The leak exposed critical vulnerabilities in the protection of sensitive national data, raising lasting concerns about the security of the electoral system."
+  }
+}

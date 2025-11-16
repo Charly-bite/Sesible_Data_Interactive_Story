@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datos Sensibles - La Historia de una Brecha</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Lora', serif;
+      background: #1a1a1a;
+      color: #EDE6DB;
+      overflow-x: hidden;
+      line-height: 1.7;
+      position: relative;
+    }
+
+    /* Smooth scroll behavior */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Animated background elements */
+    .bg-decoration {
+      position: fixed;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity 1.5s ease, transform 1.5s ease;
+    }
+
+    .bg-decoration.active {
+      opacity: 0.08;
+    }
+
+    .bg-lock {
+      top: 15%;
+      right: 10%;
+      font-size: 200px;
+      transform: rotate(-15deg);
+    }
+
+    .bg-shield {
+      bottom: 20%;
+      left: 8%;
+      font-size: 180px;
+      transform: rotate(10deg);
+    }
+
+    .bg-key {
+      top: 50%;
+      right: 5%;
+      font-size: 150px;
+      transform: rotate(25deg);
+    }
+
+    .bg-alert {
+      top: 70%;
+      left: 15%;
+      font-size: 160px;
+      transform: rotate(-20deg);
+    }
+
+    .bg-eye {
+      top: 30%;
+      left: 12%;
+      font-size: 140px;
+      transform: rotate(15deg);
+    }
+
+    .bg-network {
+      bottom: 10%;
+      right: 15%;
+      font-size: 170px;
+      transform: rotate(-10deg);
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+  background: linear-gradient(135deg, rgba(26,26,26,0.65) 0%, rgba(45,45,45,0.65) 100%);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(191, 162, 114, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(191, 162, 114, 0.05) 0%, transparent 50%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      padding: 2rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1.5s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      margin-bottom: 1rem;
+      color: #BFA272;
+  text-shadow: 0 4px 20px rgba(191, 162, 114, 0.3), 0 2px 8px rgba(0,0,0,0.25);
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      margin-bottom: 2rem;
+      color: #B7B1A8;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translate(-50%, 0); }
+      50% { transform: translate(-50%, 10px); }
+    }
+
+    .scroll-indicator span {
+      display: block;
+      width: 30px;
+      height: 50px;
+      border: 2px solid #BFA272;
+      border-radius: 25px;
+      position: relative;
+    }
+
+    .scroll-indicator span::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      background: #BFA272;
+      border-radius: 50%;
+      animation: scrollDot 2s infinite;
+    }
+
+    @keyframes scrollDot {
+      0% { top: 8px; opacity: 1; }
+      100% { top: 30px; opacity: 0; }
+    }
+
+    /* Sections */
+    section {
+      min-height: 100vh;
+      padding: 6rem 2rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    .section-content {
+      max-width: 1100px;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    .section-content.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-alt {
+  background: rgba(45,45,45,0.65);
+    }
+
+    h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 2rem;
+      color: #BFA272;
+      position: relative;
+      display: inline-block;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60%;
+      height: 3px;
+      background: linear-gradient(to right, #BFA272, transparent);
+    }
+
+    h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      margin: 2rem 0 1rem;
+      color: #B7B1A8;
+    }
+
+    p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      margin-bottom: 1.5rem;
+      color: #EDE6DB;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 50px;
+      margin: 3rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #BFA272, transparent);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 3rem;
+      padding-left: 30px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -9px;
+      top: 5px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+  background: #222;
+  border: 3px solid #444;
+  box-shadow: 0 0 0 3px rgba(191, 162, 114, 0.08);
+  transition: box-shadow 0.5s cubic-bezier(.77,0,.18,1), background 0.5s cubic-bezier(.77,0,.18,1);
+    }
+    .timeline-item.visible::before {
+  box-shadow: 0 0 16px 6px rgba(191,162,114,0.7), 0 0 0 3px rgba(191,162,114,0.2);
+  background: #BFA272;
+  border: 3px solid #1a1a1a;
+    }
+
+
+    .timeline-date {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      color: #BFA272;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .stat-card {
+  background: #181c2b;
+  border-radius: 18px;
+  border: 1.5px solid #bfa272;
+  box-shadow: 0 6px 32px rgba(191, 162, 114, 0.18);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  color: #ede6db;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+    }
+
+    .stat-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 16px 48px rgba(191, 162, 114, 0.28);
+    }
+
+    .stat-number {
+  font-family: 'Montserrat', 'Lora', serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #bfa272;
+  margin-bottom: 0.7rem;
+  letter-spacing: 1px;
+    }
+
+    .stat-label {
+  font-family: 'Lora', serif;
+  font-size: 1.15rem;
+  color: #ede6db;
+  opacity: 0.85;
+  margin-top: 0.2rem;
+    }
+
+    /* Result card styles for search results */
+    .result-card {
+      background: #0f1520; /* slightly darker than section */
+      border-radius: 12px;
+      border: 1px solid rgba(191,162,114,0.16);
+      padding: 1.25rem;
+      margin: 1rem 0;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .result-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 48px rgba(0,0,0,0.6);
+    }
+    .result-header {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      color: #BFA272;
+      margin-bottom: 0.75rem;
+      font-size: 1.05rem;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 0.45rem 1.25rem;
+      align-items: start;
+    }
+    .result-row {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+    }
+    /* fallback: any result-row marked hidden will be removed from layout */
+    .result-row.hidden { display: none !important; }
+    .result-key {
+      color: #BFA272;
+      font-weight: 700;
+      min-width: 120px;
+      flex: 0 0 140px;
+      font-size: 0.95rem;
+    }
+    .result-val {
+      color: #EDE6DB;
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      white-space: normal;
+      word-break: break-word;
+    }
+    @media (max-width: 680px) {
+      .result-grid { grid-template-columns: 1fr; }
+      .result-key { min-width: 100px; flex: 0 0 120px; }
+    }
+
+    /* CTA Section */
+    .cta-section {
+  background: linear-gradient(135deg, rgba(45,45,45,0.65) 0%, rgba(26,26,26,0.65) 100%);
+      text-align: center;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: #BFA272;
+      color: #1a1a1a;
+      box-shadow: 0 4px 20px rgba(191, 162, 114, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: #d4b788;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 30px rgba(191, 162, 114, 0.6);
+    }
+
+    /* Search form styles: improved selects, inputs and layout */
+    #searchForm {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      align-items: flex-start;
+      max-width: 920px;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    #searchForm label {
+      color: #BFA272;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    #searchForm select,
+    #searchForm input[type="text"] {
+      background: #181c2b;
+      color: #EDE6DB;
+      border: 1px solid rgba(191,162,114,0.14);
+      padding: 0.6rem 0.9rem;
+      border-radius: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      width: 100%;
+      max-width: 520px;
+      transition: box-shadow 0.15s ease, transform 0.06s ease, border-color 0.12s ease;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    /* Decorative arrow for selects while keeping native accessibility */
+    #searchForm select {
+      background-image: linear-gradient(45deg, transparent 50%, #BFA272 50%), linear-gradient(135deg, #BFA272 50%, transparent 50%);
+      background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 12px) calc(50% - 3px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      padding-right: 2.4rem;
+    }
+
+    #searchForm input::placeholder {
+      color: #A79E8F;
+      opacity: 1;
+    }
+
+    #searchForm select:focus,
+    #searchForm input[type="text"]:focus {
+      outline: none;
+      border-color: #BFA272;
+      box-shadow: 0 0 0 4px rgba(191,162,114,0.09);
+      transform: translateY(-1px);
+    }
+
+    /* Allow grouping fields horizontally on larger screens */
+    #searchFields {
+      display: flex;
+      gap: 0.8rem;
+      width: 100%;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    #searchFields > * { /* controls inside searchFields */
+      margin: 0.2rem 0;
+    }
+
+    /* small modifier for compact selects (like the label select) */
+    #searchFields .compact,
+    #searchForm .compact {
+      max-width: 170px;
+    }
+
+    /* Adjust the submit button alignment */
+    #searchForm button {
+      margin-top: 0.4rem;
+      align-self: flex-start;
+      padding: 0.85rem 2rem;
+      border-radius: 40px;
+    }
+
+    @media (max-width: 680px) {
+      #searchForm select,
+      #searchForm input[type="text"] {
+        max-width: 100%;
+      }
+      #searchForm button {
+        width: 100%;
+        max-width: 360px;
+      }
+      #searchFields {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #BFA272;
+      border: 2px solid #BFA272;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(191, 162, 114, 0.1);
+      transform: translateY(-3px);
+    }
+
+    /* Quote */
+    .quote {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      color: #B7B1A8;
+      border-left: 4px solid #BFA272;
+      padding-left: 2rem;
+      margin: 3rem 0;
+    }
+
+    /* Footer */
+    footer {
+      background: #2d2d2d;
+      padding: 3rem 2rem;
+      color: #B7B1A8;
+      border-top: 1px solid rgba(191, 162, 114, 0.2);
+    }
+
+    /* Footer layout: logo left, team info right on wide screens */
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 0 0.5rem;
+      box-sizing: border-box;
+      justify-content: space-between;
+    }
+
+    .footer-logo img {
+      max-width: 140px;
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: none;
+      opacity: 0.95;
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+    .footer-logo a { display: inline-block; }
+    .footer-logo a:hover .footer-logo img,
+    .footer-logo a:focus .footer-logo img {
+      transform: translateY(-4px) scale(1.02);
+      opacity: 1;
+    }
+    .footer-logo a { cursor: pointer; }
+
+    /* Right column with team name and details */
+    .footer-right {
+      color: #B7B1A8;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      text-align: right;
+      flex: 1 1 auto;
+      min-width: 220px;
+    }
+
+    .team-name {
+      color: #BFA272;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    .team-list {
+      color: #EDE6DB;
+      opacity: 0.95;
+      margin-bottom: 0.6rem;
+      white-space: normal;
+    }
+
+    .footer-meta {
+      margin-top: .4rem;
+      color: #B7B1A8;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 680px) {
+      .footer-inner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .footer-logo img {
+        max-width: 120px;
+      }
+      .footer-right {
+        text-align: center;
+        min-width: 0;
+        margin-top: 0.6rem;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      section {
+        padding: 4rem 1.5rem;
+      }
+
+      .timeline {
+        padding-left: 30px;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: #BFA272;
+      z-index: 1000;
+      transition: width 0.1s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Background decorative elements -->
+  <div class="bg-decoration bg-lock">🔒</div>
+  <div class="bg-decoration bg-shield">🛡️</div>
+  <div class="bg-decoration bg-key">🔑</div>
+  <div class="bg-decoration bg-alert">⚠️</div>
+  <div class="bg-decoration bg-eye">👁️</div>
+  <div class="bg-decoration bg-network">🌐</div>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-content">
+  <img src="moodboard/images/logo.png" alt="Datos Sensibles Logo" style="max-width: 420px; width: 80%; height: auto; margin-bottom: 1rem; filter: drop-shadow(0 4px 20px rgba(191,162,114,0.3));">
+  <img class="hero-logo" src="moodboard/images/logo.png" alt="Datos Sensibles Logo">
+    /* Hero logo styling */
+    .hero-logo {
+      max-width: 600px;
+      width: 90%;
+      height: auto;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 4px 20px rgba(191,162,114,0.3));
+      transition: transform 0.4s cubic-bezier(.77,0,.18,1), filter 0.4s cubic-bezier(.77,0,.18,1);
+      cursor: pointer;
+    }
+    .hero-logo:hover {
+      transform: scale(1.08) rotate(-2deg);
+      filter: drop-shadow(0 8px 32px rgba(255,255,255,0.5));
+    }
+      <p>La historia de una brecha que nos involucra a todos</p>
+    </div>
+    <div class="scroll-indicator">
+      <span></span>
+    </div>
+  </div>
+
+  <!-- Introduction -->
+  <section>
+    <div class="section-content">
+      <p>En un mundo cada vez más conectado, nuestros datos personales viajan constantemente a través de sistemas, aplicaciones y servidores. Confiamos en que estarán seguros, protegidos por capas de seguridad digital.</p>
+      <p>Pero a veces, esa confianza se rompe.</p>
+      <div class="quote">
+        "Una brecha de datos no es solo un problema técnico, es una violación de la confianza y la privacidad de miles de personas."
+      </div>
+    </div>
+  </section>
+
+  <!-- The Breach -->
+  <section class="section-alt">
+    <div class="section-content">
+      <h2>Brecha de datos INE 2016</h2>
+      <p>Todo comenzó con una vulnerabilidad aparentemente insignificante.</p>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">DÍA 1</div>
+          
+          <p>Los atacantes identifican una vulnerabilidad en un sistema crítico. La puerta está entreabierta.</p>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-date">DÍA 15</div>
+          
+          <p>Sin que nadie lo note, los datos comienzan a filtrarse. Miles de registros personales quedan expuestos.</p>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-date">DÍA 45</div>
+          
+          <p>Un equipo de seguridad detecta actividad anómala. Ya es demasiado tarde para algunos usuarios.</p>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-date">DÍA 60</div>
+          
+          <p>La noticia se hace pública. Miles de personas descubren que su información privada está en manos equivocadas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact -->
+  <section>
+    <div class="section-content">
+      <h2>El Impacto Real</h2>
+      <p>Detrás de cada estadística hay una persona real.</p>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-number">97 Millones</span>
+          <span class="stat-label">Personas afectadas</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">45</span>
+          <span class="stat-label">Días sin detectar</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Evitable</span>
+        </div>
+      </div>
+
+      <p>Las consecuencias van más allá de los números. Identidades robadas, cuentas comprometidas, pérdida de confianza en sistemas digitales. El daño emocional y financiero puede durar años.</p>
+    </div>
+  </section>
+
+  <!-- Prevention -->
+  <section class="section-alt" id="prevention">
+    <div class="section-content">
+      <h2>Datos Sensibles<h2></h2>
+      <p>Consulta la base de datos vulnerada <p></p>
+      <form id="searchForm" style="margin-bottom:2rem;">
+        <label for="searchType">Tipo de búsqueda:</label>
+        <select id="searchType" name="searchType">
+          <option value="paterno_or_materno">Paterno o Materno</option>
+          <option value="paterno_and_materno">Paterno y Materno</option>
+          <option value="full_name">Nombre completo</option>
+        </select>
+        <div id="searchFields" style="margin-top:1rem;"></div>
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">Buscar</button>
+      </form>
+      <div id="searchResults"></div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <div class="section-content">
+      <h2>Protege Tu Información</h2>
+      <p>No esperes a ser víctima de una brecha de datos. Toma acción hoy para proteger tu información personal y la de los demás.</p>
+      
+      <div class="cta-buttons">
+  <a href="https://www.cisa.gov/" class="btn btn-primary" target="_blank" rel="noopener">Aprende Más</a>
+  <a href="https://www.cybersecurityguide.org/resources/" class="btn btn-secondary" target="_blank" rel="noopener">Recursos de Seguridad</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <a href="https://cugdl.udg.mx/" target="_blank" rel="noopener noreferrer" title="Sitio CUGDL" aria-label="Ir al sitio del Centro Universitario de Guadalajara">
+          <img src="moodboard/images/CUGDL_LOGO2.png" alt="CUGDL Logo">
+        </a>
+      </div>
+      <div class="footer-right">
+        <span class="team-name">Equipo de Ciberseguridad</span>
+        <div class="team-list">Carlos Alberto Aceves • Daniel Alejandro García Laguna • Gabriela Verónica Ramírez Pulido<br>
+        Abelardo Serrano Prado • Mario De Jesús Martínez Castro</div>
+        <div class="footer-meta">Curso: Storytelling • Profesor: Prof. Víctor Magaña<br>
+        Centro Universitario de Guadalajara, Universidad de Guadalajara<br>
+        15 de Noviembre, 2025</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // --- Prevention AJAX UI ---
+    const searchTypeSelect = document.getElementById('searchType');
+    const searchFieldsDiv = document.getElementById('searchFields');
+    const searchForm = document.getElementById('searchForm');
+    const searchResultsDiv = document.getElementById('searchResults');
+
+    const FIELD_LABELS = [
+      "CVE", "NOMBRE", "PATERNO", "MATERNO", "FECNAC", "SEXO", "CALLE",
+      "INT", "EXT", "COLONIA", "CP", "E", "D", "M", "S", "L", "MZA",
+      "CONSEC", "CRED", "FOLIO", "NAC", "CURP"
+    ];
+
+    // Show-only list: limit the displayed fields to this ordered list
+    const SHOW_FIELDS = [
+      "CVE", "NOMBRE", "PATERNO", "MATERNO", "FECNAC", "SEXO", "CALLE",
+      "INT", "EXT", "COLONIA", "CP", "CURP"
+    ];
+
+    function renderFields(type) {
+      let html = '';
+      if (type === 'single') {
+        html += '<label for="label">Campo:</label>';
+        html += '<select id="label" name="label" class="compact">';
+        FIELD_LABELS.forEach(lbl => {
+          html += `<option value="${lbl}">${lbl}</option>`;
+        });
+        html += '</select>';
+        html += '<input type="text" id="value" name="value" placeholder="Valor exacto" required />';
+      } else if (type === 'paterno_or_materno') {
+        html += '<input type="text" id="term" name="term" placeholder="Apellido" required />';
+      } else if (type === 'paterno_and_materno') {
+        html += '<input type="text" id="paterno" name="paterno" placeholder="Paterno" required />';
+        html += '<input type="text" id="materno" name="materno" placeholder="Materno" required />';
+      } else if (type === 'full_name') {
+        html += '<input type="text" id="nombre" name="nombre" placeholder="Nombre" required />';
+        html += '<input type="text" id="paterno" name="paterno" placeholder="Paterno" required />';
+        html += '<input type="text" id="materno" name="materno" placeholder="Materno" required />';
+      }
+      searchFieldsDiv.innerHTML = html;
+    }
+
+    searchTypeSelect.addEventListener('change', e => {
+      renderFields(e.target.value);
+    });
+    renderFields(searchTypeSelect.value);
+
+    searchForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const type = searchTypeSelect.value;
+      let payload = { type };
+      if (type === 'single') {
+        payload.label = document.getElementById('label').value;
+        payload.value = document.getElementById('value').value;
+      } else if (type === 'paterno_or_materno') {
+        payload.term = document.getElementById('term').value;
+      } else if (type === 'paterno_and_materno') {
+        payload.paterno = document.getElementById('paterno').value;
+        payload.materno = document.getElementById('materno').value;
+      } else if (type === 'full_name') {
+        payload.nombre = document.getElementById('nombre').value;
+        payload.paterno = document.getElementById('paterno').value;
+        payload.materno = document.getElementById('materno').value;
+      }
+      searchResultsDiv.innerHTML = '<p>Buscando...</p>';
+      try {
+        const res = await fetch('/api/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        // Better error handling: if server returns a non-2xx code, show details
+        if (!res.ok) {
+          const text = await res.text();
+          console.error('API returned error', res.status, res.statusText, text);
+          searchResultsDiv.innerHTML = `<p>Error del servidor: ${res.status} ${res.statusText}</p><pre style="white-space:pre-wrap;color:#bfa272;">${text.slice(0,1000)}</pre>`;
+          return;
+        }
+
+        const results = await res.json();
+        if (!Array.isArray(results) || results.length === 0) {
+          searchResultsDiv.innerHTML = '<p>No se encontraron resultados.</p>';
+        } else {
+          let html = `<p>Resultados encontrados: ${results.length}</p>`;
+          results.slice(0, 10).forEach((client, idx) => {
+            html += `<div class="result-card">`;
+            html += `<div class="result-header">Resultado #${idx+1}</div>`;
+            html += `<div class="result-grid">`;
+            // Render only the fields listed in SHOW_FIELDS (keeps ordering predictable)
+            SHOW_FIELDS.forEach(lbl => {
+              const safeVal = (client[lbl] || 'N/A');
+              html += `<div class="result-row"><span class="result-key">${lbl}:</span><span class="result-val">${safeVal}</span></div>`;
+            });
+            html += `</div>`; // result-grid
+            html += `</div>`; // result-card
+          });
+          if (results.length > 10) html += `<p>Mostrando los primeros 10 resultados.</p>`;
+          searchResultsDiv.innerHTML = html;
+        }
+      } catch (err) {
+        console.error('Fetch error:', err);
+        const msg = err && err.message ? err.message : String(err);
+        searchResultsDiv.innerHTML = `<p>Error al consultar la base de datos: ${msg}</p>`;
+      }
+    });
+    // Progress bar
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const b = document.body;
+      const st = 'scrollTop';
+      const sh = 'scrollHeight';
+      const percent = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+      document.getElementById('progressBar').style.width = percent + '%';
+    });
+
+    // Animated background elements based on scroll
+    window.addEventListener('scroll', () => {
+      const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      const decorations = document.querySelectorAll('.bg-decoration');
+      
+      decorations.forEach((decoration, index) => {
+        const startPercent = (index * 16.66); // Each appears at different scroll points
+        const endPercent = startPercent + 20;
+        
+        if (scrollPercentage >= startPercent && scrollPercentage <= endPercent) {
+          decoration.classList.add('active');
+        } else {
+          decoration.classList.remove('active');
+        }
+      });
+    });
+
+    // Intersection Observer for fade-in and slide-up animations
+    // For section content and stat cards: instant animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        entry.target.classList.toggle('visible', entry.isIntersecting);
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.section-content').forEach(section => {
+      observer.observe(section);
+    });
+    document.querySelectorAll('.stat-card').forEach(card => {
+      observer.observe(card);
+    });
+
+    // Timeline dots: illuminate one by one with 2s delay between each
+    const timelineItems = Array.from(document.querySelectorAll('.timeline-item'));
+    let dotsOn = false;
+    let resetTimeout = null;
+    function illuminateDotsSequentially() {
+      if (dotsOn) return;
+      dotsOn = true;
+      timelineItems.forEach((item, idx) => {
+        setTimeout(() => {
+          item.classList.add('visible');
+        }, idx * 2000);
+      });
+      // Reset all dots after 8 seconds
+      if (resetTimeout) clearTimeout(resetTimeout);
+      resetTimeout = setTimeout(() => {
+        timelineItems.forEach(item => item.classList.remove('visible'));
+        dotsOn = false;
+      }, 8000);
+    }
+    function turnOffDotsSequentially() {
+      if (!dotsOn) return;
+      dotsOn = false;
+      if (resetTimeout) clearTimeout(resetTimeout);
+      timelineItems.forEach((item, idx) => {
+        setTimeout(() => {
+          item.classList.remove('visible');
+        }, idx * 2000);
+      });
+    }
+
+    // Observe the timeline container
+    const timeline = document.querySelector('.timeline');
+    if (timeline) {
+      const timelineObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            illuminateDotsSequentially();
+          } else {
+            turnOffDotsSequentially();
+          }
+        });
+      }, { threshold: 0.1 });
+      timelineObserver.observe(timeline);
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

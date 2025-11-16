@@ -1,0 +1,121 @@
+{
+  "courseInfo": {
+    "courseName": "Storytelling I - Híbrido",
+    "courseCode": "V2170",
+    "unit": "Unidad 3"
+  },
+  "activity": {
+    "title": "Moodboard para mi Storytelling",
+    "subtitle": "Borrador de Storytelling: Moodboard de Proyecto Narrativo",
+    "dueDate": "2025-11-12T23:59:00",
+    "objective": "Elaborar un moodboard como borrador de tu storytelling final.",
+    "introduction": {
+      "main": "Se acerca el momento de crear tu storytelling final con todo lo aprendido en el curso. Antes de producirlo, realizarás un borrador en formato moodboard que te permitirá definir el tipo de historia, su estética, público, propósito y formato. Un moodboard es un tablero visual donde organizas ideas, referencias, colores, tipografía, imágenes y texturas que representen la identidad y estilo de tu narrativa.",
+      "toolsAndResources": {
+        "creationTools": "Puedes crearlo fácilmente en Canva, Miro o Milanote.",
+        "colorPaletteTool": "Para generar tu paleta de colores, puedes usar la herramienta coolors.co.",
+        "examplesLink": "Para ver ejemplos de moodboards, consulta: Ejemplos de moodboards"
+      }
+    },
+    "instructions": {
+      "title": "Instrucciones paso a paso",
+      "steps": [
+        {
+          "step": "Lámina 1 – Portada",
+          "description": "Incluye el nombre del proyecto y tu nombre. Agrega una imagen o ilustración que sintetice la idea central de tu storytelling."
+        },
+        {
+          "step": "Lámina 2 – Tipo de storytelling",
+          "description": "Ve a la pestaña de \"Proyecto final\" que aparece en la cabecera de este curso y da clic en \"Trabajo final integrador Mi storytelling\" y selecciona cuál tipo de storytelling quieres trabajar."
+        },
+        {
+          "step": "Lámina 3 – Objetivo estratégico",
+          "description": "Especifica qué buscas lograr (informar, inspirar, sensibilizar, entretener, promover acción, etc.)."
+        },
+        {
+          "step": "Lámina 4 – Narrativa",
+          "description": "Describe brevemente la historia o el mensaje principal que vas a contar y su tono (optimista, crítico, reflexivo, divertido...)."
+        },
+        {
+          "step": "Lámina 5 – Estética visual y paleta de colores",
+          "description": "Muestra referencias visuales: colores, tipografía, estilo gráfico, texturas o imágenes que evoquen el tono del proyecto."
+        },
+        {
+          "step": "Lámina 6 – Audiencia",
+          "description": "Describe a quién va dirigido: edad, intereses, contexto y nivel de conocimiento del tema."
+        },
+        {
+          "step": "Lámina 7 – Formato y soporte",
+          "description": "Explica cómo se presentará (video, web, podcast, redes, etc.) e incluye bocetos si aplica."
+        },
+        {
+          "step": "Lámina 8 – Referencias visuales",
+          "description": "Incorpora imágenes, íconos o palabras clave que inspiren tu narrativa."
+        },
+        {
+          "step": "Lámina 9 – Reflexión final",
+          "description": "Explica brevemente cómo todos los elementos se integran para dar coherencia a tu storytelling."
+        }
+      ]
+    },
+    "recommendations": [
+      "Mantén coherencia entre el objetivo, la narrativa, la estética y la audiencia.",
+      "Sé visual: usa imágenes, tipografía y colores para comunicar tu idea.",
+      "Apóyate en ejemplos de moodboards, pero crea una propuesta original.",
+      "Cuida la legibilidad y equilibrio visual en tu composición.",
+      "Sube tu moodboard en formato PDF o enlace (Canva, Miro o Milanote)."
+    ],
+    "evaluationRubric": [
+      {
+        "criterion": "Claridad del tipo de storytelling",
+        "points": 20,
+        "levels": {
+          "Excelente (90-100)": "El tipo de storytelling está claramente definido y se refleja en todo el diseño.",
+          "Satisfactorio (70-89)": "Se identifica el tipo de storytelling con algunas inconsistencias.",
+          "Básico (50-69)": "Se menciona el tipo de historia, pero sin coherencia con el resto del proyecto.",
+          "Insuficiente (0-49)": "No se identifica el tipo de storytelling o es confuso."
+        }
+      },
+      {
+        "criterion": "Objetivo estratégico",
+        "points": 20,
+        "levels": {
+          "Excelente (90-100)": "El objetivo está claramente formulado y vinculado al propósito narrativo.",
+          "Satisfactorio (70-89)": "El objetivo es claro, pero falta precisión o conexión con la historia.",
+          "Básico (50-69)": "El objetivo es vago o poco relacionado con la narrativa.",
+          "Insuficiente (0-49)": "No hay un objetivo claro o es incoherente con el proyecto."
+        }
+      },
+      {
+        "criterion": "Creatividad y narrativa visual",
+        "points": 25,
+        "levels": {
+          "Excelente (90-100)": "Propuesta original, visualmente atractiva y con sentido narrativo.",
+          "Satisfactorio (70-89)": "Propuesta clara con algunos elementos creativos destacables.",
+          "Básico (50-69)": "Propuesta simple o poco arriesgada creativamente.",
+          "Insuficiente (0-49)": "Sin propuesta visual o narrativa propia."
+        }
+      },
+      {
+        "criterion": "Coherencia estética y presentación",
+        "points": 20,
+        "levels": {
+          "Excelente (90-100)": "Paleta, tipografía e imágenes integradas con equilibrio visual.",
+          "Satisfactorio (70-89)": "Predomina la coherencia con pequeños desbalances visuales.",
+          "Básico (50-69)": "Algunos elementos visuales no armonizan entre sí.",
+          "Insuficiente (0-49)": "Diseño inconexo o con problemas de legibilidad."
+        }
+      },
+      {
+        "criterion": "Audiencia y pertinencia",
+        "points": 15,
+        "levels": {
+          "Excelente (90-100)": "La propuesta se adapta claramente al público meta.",
+          "Satisfactorio (70-89)": "La audiencia está identificada, aunque falta ajuste en tono o diseño.",
+          "Básico (50-69)": "Se menciona la audiencia sin evidencia de adaptación.",
+          "Insuficiente (0-49)": "No hay referencia a la audiencia o es irrelevante."
+        }
+      }
+    ]
+  }
+}
