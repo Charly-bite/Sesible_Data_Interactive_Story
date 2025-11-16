@@ -34,6 +34,10 @@ def get_db_connection():
         # postgresql://user:password@host:port/database
         url = DATABASE_URL
         
+        # Clean up the URL - remove any whitespace/newlines that might have been introduced
+        # during copy-paste into environment variables
+        url = url.strip().replace('\n', '').replace('\r', '').replace(' ', '')
+        
         # Handle postgres:// prefix (convert to postgresql://)
         if url.startswith('postgres://'):
             url = url.replace('postgres://', 'postgresql://', 1)
