@@ -138,6 +138,13 @@
       letter-spacing: -0.02em;
     }
 
+    .hero p {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      margin-bottom: 2rem;
+      color: #B7B1A8;
+    }
+
+    /* Hero logo styling */
     .hero-logo {
       max-width: 600px;
       width: 90%;
@@ -147,16 +154,10 @@
       transition: transform 0.4s cubic-bezier(.77,0,.18,1), filter 0.4s cubic-bezier(.77,0,.18,1);
       cursor: pointer;
     }
-
+    
     .hero-logo:hover {
       transform: scale(1.08) rotate(-2deg);
       filter: drop-shadow(0 8px 32px rgba(255,255,255,0.5));
-    }
-
-    .hero p {
-      font-size: clamp(1.1rem, 2vw, 1.5rem);
-      margin-bottom: 2rem;
-      color: #B7B1A8;
     }
 
     .scroll-indicator {
