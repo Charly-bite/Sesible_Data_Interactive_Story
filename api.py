@@ -309,16 +309,12 @@ def search():
                 if not label or value == '':
                     conn.close()
                     return jsonify([])
-                if label in ['NOMBRE', 'PATERNO', 'MATERNO', 'CURP']:
-                    query = f"SELECT * FROM clients WHERE \"{label}_LC\" = {param_ph} LIMIT {param_ph} OFFSET {param_ph}"
-                    cur.execute(query, (value.lower(), limit, offset))
+                # All searches should be case-insensitive
+                if USE_POSTGRES:
+                    query = f"SELECT * FROM clients WHERE LOWER(\"{label}\") = LOWER({param_ph}) LIMIT {param_ph} OFFSET {param_ph}"
                 else:
-                    # Use case-insensitive match
-                    if USE_POSTGRES:
-                        query = f"SELECT * FROM clients WHERE LOWER(\"{label}\") = LOWER({param_ph}) LIMIT {param_ph} OFFSET {param_ph}"
-                    else:
-                        query = f"SELECT * FROM clients WHERE \"{label}\" = {param_ph} COLLATE NOCASE LIMIT {param_ph} OFFSET {param_ph}"
-                    cur.execute(query, (value, limit, offset))
+                    query = f"SELECT * FROM clients WHERE \"{label}\" = {param_ph} COLLATE NOCASE LIMIT {param_ph} OFFSET {param_ph}"
+                cur.execute(query, (value, limit, offset))
                 rows = cur.fetchall()
                 conn.close()
                 results = [row_to_dict(r) for r in rows]
@@ -331,7 +327,7 @@ def search():
                 if not term:
                     conn.close()
                     return jsonify([])
-                query = f"SELECT * FROM clients WHERE PATERNO_LC = {param_ph} OR MATERNO_LC = {param_ph} LIMIT {param_ph} OFFSET {param_ph}"
+                query = f"SELECT * FROM clients WHERE LOWER(PATERNO) = {param_ph} OR LOWER(MATERNO) = {param_ph} LIMIT {param_ph} OFFSET {param_ph}"
                 cur.execute(query, (term, term, limit, offset))
                 rows = cur.fetchall()
                 conn.close()
@@ -345,7 +341,7 @@ def search():
                 if not paterno or not materno:
                     conn.close()
                     return jsonify([])
-                query = f"SELECT * FROM clients WHERE PATERNO_LC = {param_ph} AND MATERNO_LC = {param_ph} LIMIT {param_ph} OFFSET {param_ph}"
+                query = f"SELECT * FROM clients WHERE LOWER(PATERNO) = {param_ph} AND LOWER(MATERNO) = {param_ph} LIMIT {param_ph} OFFSET {param_ph}"
                 cur.execute(query, (paterno, materno, limit, offset))
                 rows = cur.fetchall()
                 conn.close()
@@ -360,7 +356,7 @@ def search():
                 if not nombre or not paterno or not materno:
                     conn.close()
                     return jsonify([])
-                query = f"SELECT * FROM clients WHERE NOMBRE_LC = {param_ph} AND PATERNO_LC = {param_ph} AND MATERNO_LC = {param_ph} LIMIT {param_ph} OFFSET {param_ph}"
+                query = f"SELECT * FROM clients WHERE LOWER(NOMBRE) = {param_ph} AND LOWER(PATERNO) = {param_ph} AND LOWER(MATERNO) = {param_ph} LIMIT {param_ph} OFFSET {param_ph}"
                 cur.execute(query, (nombre, paterno, materno, limit, offset))
                 rows = cur.fetchall()
                 conn.close()
