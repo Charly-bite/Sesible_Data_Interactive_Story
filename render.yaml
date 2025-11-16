@@ -5,7 +5,10 @@ services:
     env: python
     plan: free
     region: oregon
-  buildCommand: "pip install -r requirements.txt && python scripts/fetch_db_from_s3.py s3://my-bucket/path/to/data.db || python build_db.py || true"
+    buildCommand: >
+      pip install -r requirements.txt && 
+      python scripts/fetch_db_from_s3.py s3://sesible-data-story-db-carlos/data.db || true && 
+      python build_db.py || true
     startCommand: "gunicorn api:app --bind 0.0.0.0:$PORT"
     envVars:
       - key: AUTH_USER
@@ -14,10 +17,8 @@ services:
         value: DatosSensibles2025$
       - key: FLASK_SECRET
         value: change-me-in-production
-    disk:
-      mountPath: /opt/render/project/data
-      sizeGb: 5
-      persistent: true
+    # If you have a paid Render plan with a persistent disk, uncomment and
+    # set the mount path above, then set DATA_DIRECTORY in envVars to that path.
 
 # Notes: The `buildCommand` runs the DB build if CSVs are present. If you prefer to
 # keep CSV files outside of your repository, upload them to the service's disk or use
