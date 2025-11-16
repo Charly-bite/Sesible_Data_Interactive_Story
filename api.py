@@ -275,7 +275,8 @@ def search():
             # Helper to convert rows to dict
             def row_to_dict(row):
                 if USE_POSTGRES:
-                    return dict(row)
+                    # PostgreSQL returns lowercase column names, convert to uppercase for consistency
+                    return {k.upper(): v for k, v in dict(row).items()}
                 else:
                     return {k: row[k] for k in row.keys()}
             
