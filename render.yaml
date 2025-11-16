@@ -1,0 +1,24 @@
+# Render manifest template - adjust fields as needed after connecting your repo
+services:
+  - type: web
+    name: datos-sensibles
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: "pip install -r requirements.txt && python build_db.py || true"
+    startCommand: "gunicorn api:app --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: AUTH_USER
+        value: Storytelling
+      - key: AUTH_PASSWORD
+        value: DatosSensibles2025$
+      - key: FLASK_SECRET
+        value: change-me-in-production
+    disk:
+      mountPath: /opt/render/project/data
+      sizeGb: 5
+      persistent: true
+
+# Notes: The `buildCommand` runs the DB build if CSVs are present. If you prefer to
+# keep CSV files outside of your repository, upload them to the service's disk or use
+# object storage (S3) and adjust `build_db.py` accordingly.

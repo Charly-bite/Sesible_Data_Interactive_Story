@@ -90,5 +90,26 @@ Optional follow-ups
 - Add a `LICENSE` file (MIT recommended) if you want to open-source the repository. This README does not change project licensing.
 - Add a simple GitHub Actions workflow to run tests and build the DB as a sanity check.
 
+Deploying on Render.com
+
+This project can be deployed as a simple Web Service on Render. Minimal steps:
+
+1. Create a new Web Service on Render and connect your GitHub repository.
+2. Set the runtime to Python. Leave the default branch set to `main`.
+3. Set the Build Command and Start Command to:
+
+	Build Command: pip install -r requirements.txt && python build_db.py || true
+	Start Command: gunicorn api:app --bind 0.0.0.0:$PORT
+
+4. Add environment variables on Render:
+	- AUTH_USER and AUTH_PASSWORD — override the login credentials
+	- FLASK_SECRET — a secure secret for sessions
+
+5. If you need to process large CSV files, add a persistent disk to the service and upload your CSVs there. Update `build_db.py` or the `DATA_DIRECTORY` in `client_data.py` to point to that disk so the DB can be built during deployment.
+
+6. Optional: use `render.yaml` included in the repository to declare the service. After the first deploy, you can edit the service settings in the Render dashboard.
+
+Note that the `Data/` directory is ignored in the public repository by default to avoid committing large/sensitive CSVs. For a persistent copy, use a disk, or store the CSVs in a private object store and download during the build phase.
+
 Contact
 - Repository owner: Charly-bite — https://github.com/Charly-bite
