@@ -133,10 +133,15 @@ This project can be deployed as a simple Web Service on Render. Minimal steps:
   2. In Render Build Command, download the DB into the `DATA_DIRECTORY` and build the DB if needed:
 
 	  pip install -r requirements.txt
-	  ./scripts/fetch_db_from_s3.sh s3://my-bucket/path/to/data.db || true
+	# Download using Python (uses boto3 and IAM):
+	python scripts/fetch_db_from_s3.py s3://my-bucket/path/to/data.db || true
 	  python build_db.py || true
 
   This will keep your `data.db` private (it is stored in S3) and the instance will download it during each deploy.
+
+Notes for debugging
+- Check the Render Build Logs for a line that says "Downloading ..." followed by "Downloaded to" coming from `fetch_db_from_s3.py`. If you don't see these lines, either the script didn't run or there was an error; look earlier in the build logs for Python/boto3 errors.
+- If you prefer `awscli` instead of boto3, you can add `pip install awscli` to the build command and use `aws s3 cp` as before.
 6. Optional: use `render.yaml` included in the repository to declare the service. After the first deploy, you can edit the service settings in the Render dashboard.
 
 Note that the `Data/` directory is ignored in the public repository by default to avoid committing large/sensitive CSVs. For a persistent copy, use a disk, or store the CSVs in a private object store and download during the build phase.

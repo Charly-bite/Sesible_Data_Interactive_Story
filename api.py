@@ -94,6 +94,13 @@ def get_data(use_cache=True):
     if use_cache and _cached_data is not None:
         return _cached_data
 
+    # If the DATA_DIRECTORY does not exist, return empty dataset rather than
+    # raising an exception. This happens if the DB or CSVs are not yet present
+    # (for example while waiting for an S3 download during build).
+    if not os.path.isdir(DATA_DIRECTORY):
+        print(f"Info: DATA_DIRECTORY not found: {DATA_DIRECTORY}")
+        return []
+
     data_files = [os.path.join(DATA_DIRECTORY, f) for f in os.listdir(DATA_DIRECTORY) if f.lower().endswith('.csv')]
     # Protect loading so only one thread loads at a time
     with _data_lock:
