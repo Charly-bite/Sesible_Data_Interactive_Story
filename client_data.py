@@ -2,10 +2,9 @@ import csv
 import os
 
 # --- Configuration ---
+# Reduced to only the columns we actually display
 EXPECTED_LABELS = [
-    "CVE", "NOMBRE", "PATERNO", "MATERNO", "FECNAC", "SEXO", "CALLE",
-    "INT", "EXT", "COLONIA", "CP", "E", "D", "M", "S", "L", "MZA",
-    "CONSEC", "CRED", "FOLIO", "NAC", "CURP"
+    "NOMBRE", "PATERNO", "MATERNO", "FECNAC", "CALLE", "COLONIA", "CURP"
 ]
 DATA_DIRECTORY = os.environ.get('DATA_DIRECTORY', './Data')
 

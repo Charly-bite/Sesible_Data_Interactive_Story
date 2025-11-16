@@ -31,6 +31,7 @@ def build_db(db_path=DB_PATH, data_dir=DATA_DIRECTORY):
     cur = conn.cursor()
 
     # Create table with TEXT columns
+    # Now using reduced column set (7 columns instead of 22)
     cols = EXPECTED_LABELS
     col_defs = ', '.join([f'"{c}" TEXT' for c in cols])
     # Add LC columns for indexed fields

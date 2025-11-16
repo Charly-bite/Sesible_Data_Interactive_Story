@@ -50,3 +50,8 @@ coverage.xml
 
 # Ignore secret/auth config in development
 auth.json
+
+# Database backups
+data_backup.db
+data_optimized.db
+*.db

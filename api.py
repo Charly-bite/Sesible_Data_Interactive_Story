@@ -7,6 +7,14 @@ import json
 import client_data
 import uuid
 from build_db import DB_PATH, build_db
+from database import get_db_connection, execute_query, USE_POSTGRES
+
+# Load environment variables from .env file if present
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 # --- IMPORTANT: Rename code.py to client_data.py to avoid module conflict ---
 # If you have not already, rename your code.py file to client_data.py
@@ -125,13 +133,13 @@ def get_data(use_cache=True):
     return _cached_data
 
 
-def get_db_connection():
-    """Return a new sqlite3 connection with row factory as dict.
-
+def get_db_connection_legacy():
+    """Return a database connection (SQLite or PostgreSQL).
+    
+    This function is kept for compatibility but now uses the database module.
     Caller should close the connection when done.
     """
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-    conn.row_factory = sqlite3.Row
+    conn, db_type = get_db_connection()
     return conn
 
 
@@ -253,13 +261,26 @@ def search():
             limit = 100
         offset = int(req.get('offset') or 0)
 
-        # If SQLite DB exists, use it for all searches
-        if os.path.exists(DB_PATH):
-            conn = get_db_connection()
-            cur = conn.cursor()
+        # Use database (SQLite or PostgreSQL)
+        if USE_POSTGRES or os.path.exists(DB_PATH):
+            conn, db_type = get_db_connection()
+            
+            # Get appropriate cursor
+            if USE_POSTGRES:
+                from psycopg2.extras import RealDictCursor
+                cur = conn.cursor(cursor_factory=RealDictCursor)
+            else:
+                cur = conn.cursor()
 
+            # Helper to convert rows to dict
             def row_to_dict(row):
-                return {k: row[k] for k in row.keys()}
+                if USE_POSTGRES:
+                    return dict(row)
+                else:
+                    return {k: row[k] for k in row.keys()}
+            
+            # Parameter placeholder (? for SQLite, %s for PostgreSQL)
+            param_ph = '%s' if USE_POSTGRES else '?'
 
             def is_blocked_row_dict(d):
                 # Normalize and check blocked full names and identifiers
@@ -289,10 +310,15 @@ def search():
                     conn.close()
                     return jsonify([])
                 if label in ['NOMBRE', 'PATERNO', 'MATERNO', 'CURP']:
-                    cur.execute(f"SELECT * FROM clients WHERE \"{label}_LC\" = ? LIMIT ? OFFSET ?", (value.lower(), limit, offset))
+                    query = f"SELECT * FROM clients WHERE \"{label}_LC\" = {param_ph} LIMIT {param_ph} OFFSET {param_ph}"
+                    cur.execute(query, (value.lower(), limit, offset))
                 else:
-                    # Use case-insensitive match using COLLATE NOCASE
-                    cur.execute(f"SELECT * FROM clients WHERE \"{label}\" = ? COLLATE NOCASE LIMIT ? OFFSET ?", (value, limit, offset))
+                    # Use case-insensitive match
+                    if USE_POSTGRES:
+                        query = f"SELECT * FROM clients WHERE LOWER(\"{label}\") = LOWER({param_ph}) LIMIT {param_ph} OFFSET {param_ph}"
+                    else:
+                        query = f"SELECT * FROM clients WHERE \"{label}\" = {param_ph} COLLATE NOCASE LIMIT {param_ph} OFFSET {param_ph}"
+                    cur.execute(query, (value, limit, offset))
                 rows = cur.fetchall()
                 conn.close()
                 results = [row_to_dict(r) for r in rows]
@@ -305,7 +331,8 @@ def search():
                 if not term:
                     conn.close()
                     return jsonify([])
-                cur.execute("SELECT * FROM clients WHERE PATERNO_LC = ? OR MATERNO_LC = ? LIMIT ? OFFSET ?", (term, term, limit, offset))
+                query = f"SELECT * FROM clients WHERE PATERNO_LC = {param_ph} OR MATERNO_LC = {param_ph} LIMIT {param_ph} OFFSET {param_ph}"
+                cur.execute(query, (term, term, limit, offset))
                 rows = cur.fetchall()
                 conn.close()
                 results = [row_to_dict(r) for r in rows]
@@ -318,7 +345,8 @@ def search():
                 if not paterno or not materno:
                     conn.close()
                     return jsonify([])
-                cur.execute("SELECT * FROM clients WHERE PATERNO_LC = ? AND MATERNO_LC = ? LIMIT ? OFFSET ?", (paterno, materno, limit, offset))
+                query = f"SELECT * FROM clients WHERE PATERNO_LC = {param_ph} AND MATERNO_LC = {param_ph} LIMIT {param_ph} OFFSET {param_ph}"
+                cur.execute(query, (paterno, materno, limit, offset))
                 rows = cur.fetchall()
                 conn.close()
                 results = [row_to_dict(r) for r in rows]
@@ -332,7 +360,8 @@ def search():
                 if not nombre or not paterno or not materno:
                     conn.close()
                     return jsonify([])
-                cur.execute("SELECT * FROM clients WHERE NOMBRE_LC = ? AND PATERNO_LC = ? AND MATERNO_LC = ? LIMIT ? OFFSET ?", (nombre, paterno, materno, limit, offset))
+                query = f"SELECT * FROM clients WHERE NOMBRE_LC = {param_ph} AND PATERNO_LC = {param_ph} AND MATERNO_LC = {param_ph} LIMIT {param_ph} OFFSET {param_ph}"
+                cur.execute(query, (nombre, paterno, materno, limit, offset))
                 rows = cur.fetchall()
                 conn.close()
                 results = [row_to_dict(r) for r in rows]

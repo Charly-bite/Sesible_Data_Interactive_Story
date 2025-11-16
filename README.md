@@ -90,6 +90,45 @@ Optional follow-ups
 - Add a `LICENSE` file (MIT recommended) if you want to open-source the repository. This README does not change project licensing.
 - Add a simple GitHub Actions workflow to run tests and build the DB as a sanity check.
 
+Expose the local site with ngrok
+--------------------------------
+
+If you want to share the interactive page for testing or demos, use ngrok to create a secure public URL that tunnels to your local server.
+
+1. Install ngrok:
+
+	- Quick install script (Linux x86_64):
+
+	  ./scripts/install_ngrok.sh
+
+	- Or follow instructions at https://ngrok.com/download for other platforms.
+
+2. Authenticate ngrok (run once after signing up on ngrok):
+
+	ngrok authtoken <your-token>
+
+3. Start the server and tunnel (this script starts `python api.py` and opens a tunnel to port 5000):
+
+	chmod +x ./scripts/*.sh
+	./scripts/ngrok.sh
+
+	If you prefer a different port, pass it as an argument: `./scripts/ngrok.sh 8000`
+
+4. The script prints a public URL (for example: https://a1b2c3.ngrok.io). Open it and log-in with your credentials.
+
+Troubleshooting
+---------------
+- If the public URL does not show up immediately, check `/tmp/ngrok.log` for ngrok startup messages.
+- If your local server uses gunicorn (recommended for production) you can run it first, then open an ngrok tunnel to the same port, eg: `gunicorn api:app --bind 0.0.0.0:8000` then `ngrok http 8000`.
+- If you prefer an integrated approach inside Python, see the `pyngrok` library, but be aware of additional dependencies and token setup.
+	- Fallback: If your system ngrok binary is out-of-date or incompatible with your ngrok account, you can use `pyngrok` (it downloads a modern ngrok agent for you):
+
+		./scripts/pyngrok.sh
+
+		This starts the Flask app and creates a public URL using `pyngrok`. If you want to set the auth token with an environment variable instead of `~/.ngrok2/ngrok.yml` use `NGROK_AUTH_TOKEN`:
+
+		NGROK_AUTH_TOKEN=xxx ./scripts/pyngrok.sh
+
 Large files, DB and Git LFS
 
 - If your `data.db` is large (for example > 100MB), pushing directly to GitHub will fail. We prepared the repository for Git LFS by adding `.gitattributes`; to upload the DB with LFS do the following locally:
