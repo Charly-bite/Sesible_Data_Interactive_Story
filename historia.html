@@ -1,114 +1,190 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Datos Sensibles - La Historia de una Brecha</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <title>Datos Sensibles — Análisis de Nube Segura | Trabajo 4.1</title>
+  <meta name="description"
+    content="Análisis crítico de la filtración del Padrón Electoral del INE (2016) como caso de estudio de seguridad en la nube. Unidad 4: Implementación de una nube segura.">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Montserrat:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
   <style>
+    /* ===== DESIGN TOKENS ===== */
+    :root {
+      --bg-primary: #0d0f14;
+      --bg-secondary: #13161e;
+      --bg-card: #181c28;
+      --bg-card-hover: #1e2233;
+      --bg-glass: rgba(24, 28, 40, 0.72);
+      --accent: #BFA272;
+      --accent-bright: #d4b788;
+      --accent-dim: rgba(191, 162, 114, 0.12);
+      --accent-glow: rgba(191, 162, 114, 0.25);
+      --text-primary: #EDE6DB;
+      --text-secondary: #B7B1A8;
+      --text-muted: #7a7670;
+      --success: #4ade80;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --info: #60a5fa;
+      --border-subtle: rgba(191, 162, 114, 0.08);
+      --border-accent: rgba(191, 162, 114, 0.2);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45);
+      --shadow-glow: 0 0 40px rgba(191, 162, 114, 0.12);
+      --font-body: 'Lora', serif;
+      --font-heading: 'Montserrat', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    body {
-      font-family: 'Lora', serif;
-      background: #1a1a1a;
-      color: #EDE6DB;
-      overflow-x: hidden;
-      line-height: 1.7;
-      position: relative;
-    }
-
-    /* Smooth scroll behavior */
     html {
       scroll-behavior: smooth;
     }
 
-    /* Animated background elements */
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.75;
+    }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+      z-index: 1000;
+      transition: width 0.1s ease;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    /* ===== BACKGROUND DECORATIONS ===== */
     .bg-decoration {
       position: fixed;
       opacity: 0;
       pointer-events: none;
       z-index: 0;
       transition: opacity 1.5s ease, transform 1.5s ease;
+      font-size: 140px;
     }
 
     .bg-decoration.active {
-      opacity: 0.08;
+      opacity: 0.05;
     }
 
     .bg-lock {
       top: 15%;
       right: 10%;
-      font-size: 200px;
       transform: rotate(-15deg);
     }
 
     .bg-shield {
       bottom: 20%;
       left: 8%;
-      font-size: 180px;
       transform: rotate(10deg);
     }
 
     .bg-key {
       top: 50%;
       right: 5%;
-      font-size: 150px;
       transform: rotate(25deg);
     }
 
     .bg-alert {
       top: 70%;
       left: 15%;
-      font-size: 160px;
       transform: rotate(-20deg);
     }
 
     .bg-eye {
       top: 30%;
       left: 12%;
-      font-size: 140px;
       transform: rotate(15deg);
     }
 
     .bg-network {
       bottom: 10%;
       right: 15%;
-      font-size: 170px;
       transform: rotate(-10deg);
     }
 
-    /* Hero Section */
+    /* ===== PHASE BADGE ===== */
+    .phase-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, var(--accent), #a08855);
+      color: var(--bg-primary);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.4rem 1.1rem;
+      border-radius: 50px;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    .phase-badge .phase-num {
+      background: var(--bg-primary);
+      color: var(--accent);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 900;
+    }
+
+    /* ===== HERO ===== */
     .hero {
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
       position: relative;
-  background: linear-gradient(135deg, rgba(26,26,26,0.65) 0%, rgba(45,45,45,0.65) 100%);
+      background: linear-gradient(135deg, rgba(13, 15, 20, 0.8) 0%, rgba(19, 22, 30, 0.8) 100%);
       overflow: hidden;
     }
 
     .hero::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(191, 162, 114, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(191, 162, 114, 0.05) 0%, transparent 50%);
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 50%, rgba(191, 162, 114, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(191, 162, 114, 0.04) 0%, transparent 50%);
       animation: pulse 8s ease-in-out infinite;
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
+
+      0%,
+      100% {
+        opacity: 0.5;
+      }
+
+      50% {
+        opacity: 1;
+      }
     }
 
     .hero-content {
@@ -128,20 +204,35 @@
       }
     }
 
+    .hero-logo {
+      max-width: 320px;
+      margin-bottom: 1.5rem;
+      filter: drop-shadow(0 8px 32px rgba(191, 162, 114, 0.15));
+    }
+
     .hero h1 {
-      font-family: 'Montserrat', sans-serif;
+      font-family: var(--font-heading);
       font-weight: 900;
-      font-size: clamp(2.5rem, 8vw, 5rem);
-      margin-bottom: 1rem;
-      color: #BFA272;
-  text-shadow: 0 4px 20px rgba(191, 162, 114, 0.3), 0 2px 8px rgba(0,0,0,0.25);
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+      text-shadow: 0 4px 20px rgba(191, 162, 114, 0.3);
       letter-spacing: -0.02em;
     }
 
+    .hero .hero-subtitle {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.03em;
+    }
+
     .hero p {
-      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--text-muted);
       margin-bottom: 2rem;
-      color: #B7B1A8;
     }
 
     .scroll-indicator {
@@ -153,15 +244,22 @@
     }
 
     @keyframes bounce {
-      0%, 100% { transform: translate(-50%, 0); }
-      50% { transform: translate(-50%, 10px); }
+
+      0%,
+      100% {
+        transform: translate(-50%, 0);
+      }
+
+      50% {
+        transform: translate(-50%, 10px);
+      }
     }
 
     .scroll-indicator span {
       display: block;
-      width: 30px;
-      height: 50px;
-      border: 2px solid #BFA272;
+      width: 28px;
+      height: 46px;
+      border: 2px solid var(--accent);
       border-radius: 25px;
       position: relative;
     }
@@ -172,19 +270,26 @@
       top: 8px;
       left: 50%;
       transform: translateX(-50%);
-      width: 6px;
-      height: 6px;
-      background: #BFA272;
+      width: 5px;
+      height: 5px;
+      background: var(--accent);
       border-radius: 50%;
       animation: scrollDot 2s infinite;
     }
 
     @keyframes scrollDot {
-      0% { top: 8px; opacity: 1; }
-      100% { top: 30px; opacity: 0; }
+      0% {
+        top: 8px;
+        opacity: 1;
+      }
+
+      100% {
+        top: 28px;
+        opacity: 0;
+      }
     }
 
-    /* Sections */
+    /* ===== SECTIONS ===== */
     section {
       min-height: 100vh;
       padding: 6rem 2rem;
@@ -209,15 +314,15 @@
     }
 
     .section-alt {
-  background: rgba(45,45,45,0.65);
+      background: rgba(19, 22, 30, 0.65);
     }
 
     h2 {
-      font-family: 'Montserrat', sans-serif;
+      font-family: var(--font-heading);
       font-weight: 700;
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      margin-bottom: 2rem;
-      color: #BFA272;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      margin-bottom: 1.5rem;
+      color: var(--accent);
       position: relative;
       display: inline-block;
     }
@@ -225,28 +330,158 @@
     h2::after {
       content: '';
       position: absolute;
-      bottom: -10px;
+      bottom: -8px;
       left: 0;
       width: 60%;
       height: 3px;
-      background: linear-gradient(to right, #BFA272, transparent);
+      background: linear-gradient(to right, var(--accent), transparent);
     }
 
     h3 {
-      font-family: 'Montserrat', sans-serif;
+      font-family: var(--font-heading);
       font-weight: 700;
-      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
       margin: 2rem 0 1rem;
-      color: #B7B1A8;
+      color: var(--text-secondary);
     }
 
     p {
-      font-size: clamp(1rem, 2vw, 1.2rem);
-      margin-bottom: 1.5rem;
-      color: #EDE6DB;
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
+      margin-bottom: 1.3rem;
+      color: var(--text-primary);
     }
 
-    /* Timeline */
+    /* ===== INCIDENT PROFILE CARD (Fase 1) ===== */
+    .profile-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-lg);
+      padding: 2rem 2.5rem;
+      margin: 2.5rem 0;
+      box-shadow: var(--shadow-card), var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    .profile-card .profile-id {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.05em;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem 2rem;
+    }
+
+    .profile-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .profile-field .field-label {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+    }
+
+    .profile-field .field-value {
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .profile-field .field-value.mono {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+    }
+
+    /* ===== QUOTE ===== */
+    .quote {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+      color: var(--text-secondary);
+      border-left: 4px solid var(--accent);
+      padding-left: 2rem;
+      margin: 2.5rem 0;
+    }
+
+    /* ===== VULNERABILITY MAP (Fase 2) ===== */
+    .vuln-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .vuln-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.2rem 1.4rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .vuln-item:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .vuln-item.applies {
+      border-color: var(--success);
+      background: rgba(74, 222, 128, 0.04);
+    }
+
+    .vuln-item.applies:hover {
+      box-shadow: 0 8px 28px rgba(74, 222, 128, 0.12);
+    }
+
+    .vuln-item.not-applies {
+      border-color: var(--border-subtle);
+      opacity: 0.55;
+    }
+
+    .vuln-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .vuln-text {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .vuln-item.not-applies .vuln-text {
+      color: var(--text-muted);
+    }
+
+    /* ===== TIMELINE ===== */
     .timeline {
       position: relative;
       padding-left: 50px;
@@ -260,12 +495,12 @@
       top: 0;
       bottom: 0;
       width: 2px;
-      background: linear-gradient(to bottom, #BFA272, transparent);
+      background: linear-gradient(to bottom, var(--accent), transparent);
     }
 
     .timeline-item {
       position: relative;
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
       padding-left: 30px;
     }
 
@@ -277,164 +512,278 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
-  background: #222;
-  border: 3px solid #444;
-  box-shadow: 0 0 0 3px rgba(191, 162, 114, 0.08);
-  transition: box-shadow 0.5s cubic-bezier(.77,0,.18,1), background 0.5s cubic-bezier(.77,0,.18,1);
-    }
-    .timeline-item.visible::before {
-  box-shadow: 0 0 16px 6px rgba(191,162,114,0.7), 0 0 0 3px rgba(191,162,114,0.2);
-  background: #BFA272;
-  border: 3px solid #1a1a1a;
+      background: var(--bg-secondary);
+      border: 3px solid #444;
+      box-shadow: 0 0 0 3px rgba(191, 162, 114, 0.08);
+      transition: box-shadow 0.5s cubic-bezier(.77, 0, .18, 1), background 0.5s cubic-bezier(.77, 0, .18, 1);
     }
 
+    .timeline-item.visible::before {
+      box-shadow: 0 0 16px 6px rgba(191, 162, 114, 0.7), 0 0 0 3px rgba(191, 162, 114, 0.2);
+      background: var(--accent);
+      border: 3px solid var(--bg-primary);
+    }
 
     .timeline-date {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      color: #BFA272;
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.03em;
     }
 
-    /* Stats Grid */
+    .timeline-item p {
+      margin-bottom: 0;
+      font-size: 1rem;
+    }
+
+    /* ===== STATS GRID (Fase 3) ===== */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin: 3rem 0;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 2.5rem 0;
     }
 
     .stat-card {
-  background: #181c2b;
-  border-radius: 18px;
-  border: 1.5px solid #bfa272;
-  box-shadow: 0 6px 32px rgba(191, 162, 114, 0.18);
-  padding: 2.5rem 1.5rem;
-  text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
-  color: #ede6db;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1.5px solid var(--accent-dim);
+      box-shadow: var(--shadow-card);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     .stat-card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 16px 48px rgba(191, 162, 114, 0.28);
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 16px 48px rgba(191, 162, 114, 0.18);
     }
 
     .stat-number {
-  font-family: 'Montserrat', 'Lora', serif;
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: #bfa272;
-  margin-bottom: 0.7rem;
-  letter-spacing: 1px;
+      font-family: var(--font-heading);
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
     }
 
     .stat-label {
-  font-family: 'Lora', serif;
-  font-size: 1.15rem;
-  color: #ede6db;
-  opacity: 0.85;
-  margin-top: 0.2rem;
-    }
-
-    /* Result card styles for search results */
-    .result-card {
-      background: #0f1520; /* slightly darker than section */
-      border-radius: 12px;
-      border: 1px solid rgba(191,162,114,0.16);
-      padding: 1.25rem;
-      margin: 1rem 0;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.45);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-    }
-    .result-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 18px 48px rgba(0,0,0,0.6);
-    }
-    .result-header {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      color: #BFA272;
-      margin-bottom: 0.75rem;
+      font-family: var(--font-body);
       font-size: 1.05rem;
+      color: var(--text-primary);
+      opacity: 0.85;
     }
-    .result-grid {
+
+    /* ===== IMPACT QUESTIONS ===== */
+    .impact-questions {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 0.45rem 1.25rem;
-      align-items: start;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+      margin: 2rem 0;
     }
-    .result-row {
-      display: flex;
-      gap: 0.6rem;
-      align-items: flex-start;
+
+    .impact-q {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      transition: border-color 0.3s ease;
     }
-    /* fallback: any result-row marked hidden will be removed from layout */
-    .result-row.hidden { display: none !important; }
-    .result-key {
-      color: #BFA272;
+
+    .impact-q:hover {
+      border-color: var(--border-accent);
+    }
+
+    .impact-q .q-label {
+      font-family: var(--font-heading);
       font-weight: 700;
-      min-width: 120px;
-      flex: 0 0 140px;
       font-size: 0.95rem;
-    }
-    .result-val {
-      color: #EDE6DB;
-      font-family: 'Lora', serif;
-      font-size: 0.95rem;
-      white-space: normal;
-      word-break: break-word;
-    }
-    @media (max-width: 680px) {
-      .result-grid { grid-template-columns: 1fr; }
-      .result-key { min-width: 100px; flex: 0 0 120px; }
+      color: var(--accent);
+      margin-bottom: 0.6rem;
     }
 
-    /* CTA Section */
-    .cta-section {
-  background: linear-gradient(135deg, rgba(45,45,45,0.65) 0%, rgba(26,26,26,0.65) 100%);
-      text-align: center;
+    .impact-q .q-answer {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0;
     }
 
-    .cta-buttons {
+    /* ===== RESPONSE SPECTRUM (Fase 4) ===== */
+    .response-spectrum {
+      margin: 2.5rem 0;
       display: flex;
+      flex-direction: column;
       gap: 1.5rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 2rem;
     }
 
-    .btn {
-      font-family: 'Montserrat', sans-serif;
+    .spectrum-row {
+      display: grid;
+      grid-template-columns: 160px 1fr auto;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .spectrum-label {
+      font-family: var(--font-heading);
       font-weight: 700;
-      padding: 1rem 2.5rem;
-      border: none;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      text-align: right;
+    }
+
+    .spectrum-bar-wrap {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.06);
       border-radius: 50px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
+      overflow: hidden;
+      position: relative;
     }
 
-    .btn-primary {
-      background: #BFA272;
-      color: #1a1a1a;
-      box-shadow: 0 4px 20px rgba(191, 162, 114, 0.4);
+    .spectrum-bar {
+      height: 100%;
+      border-radius: 50px;
+      transition: width 1.5s cubic-bezier(.4, 0, .2, 1);
+      width: 0;
     }
 
-    .btn-primary:hover {
-      background: #d4b788;
-      transform: translateY(-3px);
-      box-shadow: 0 6px 30px rgba(191, 162, 114, 0.6);
+    .spectrum-bar.good {
+      background: linear-gradient(90deg, #22c55e, #4ade80);
     }
 
-    /* Search form styles: improved selects, inputs and layout */
+    .spectrum-bar.warn {
+      background: linear-gradient(90deg, #eab308, #fbbf24);
+    }
+
+    .spectrum-bar.bad {
+      background: linear-gradient(90deg, #dc2626, #f87171);
+    }
+
+    .spectrum-rating {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      min-width: 100px;
+      text-align: left;
+    }
+
+    .spectrum-rating.good {
+      color: var(--success);
+    }
+
+    .spectrum-rating.warn {
+      color: var(--warning);
+    }
+
+    .spectrum-rating.bad {
+      color: var(--danger);
+    }
+
+    @media (max-width: 680px) {
+      .spectrum-row {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+      }
+
+      .spectrum-label {
+        text-align: left;
+      }
+
+      .spectrum-rating {
+        text-align: left;
+      }
+    }
+
+    /* ===== DIAGNOSIS MATRIX ===== */
+    .diagnosis-matrix {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+    }
+
+    .diagnosis-matrix th {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--accent);
+      text-align: left;
+      padding: 1rem;
+      border-bottom: 2px solid var(--border-accent);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .diagnosis-matrix td {
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+
+    .diagnosis-matrix tr:hover td {
+      background: rgba(191, 162, 114, 0.03);
+    }
+
+    .diagnosis-matrix .check-yes {
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .diagnosis-matrix .check-no {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    /* ===== LESSONS / PROJECT CONNECTION (Fase 5) ===== */
+    .lessons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+      margin: 2rem 0;
+    }
+
+    .lesson-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .lesson-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-accent);
+    }
+
+    .lesson-card .lesson-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .lesson-card .lesson-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .lesson-card .lesson-desc {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ===== SEARCH FORM STYLES ===== */
     #searchForm {
       display: flex;
       flex-direction: column;
@@ -446,20 +795,20 @@
     }
 
     #searchForm label {
-      color: #BFA272;
-      font-family: 'Montserrat', sans-serif;
+      color: var(--accent);
+      font-family: var(--font-heading);
       font-weight: 700;
       margin-bottom: 0.25rem;
     }
 
     #searchForm select,
     #searchForm input[type="text"] {
-      background: #181c2b;
-      color: #EDE6DB;
-      border: 1px solid rgba(191,162,114,0.14);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--accent-dim);
       padding: 0.6rem 0.9rem;
       border-radius: 10px;
-      font-family: 'Montserrat', sans-serif;
+      font-family: var(--font-heading);
       font-size: 0.95rem;
       width: 100%;
       max-width: 520px;
@@ -469,9 +818,8 @@
       appearance: none;
     }
 
-    /* Decorative arrow for selects while keeping native accessibility */
     #searchForm select {
-      background-image: linear-gradient(45deg, transparent 50%, #BFA272 50%), linear-gradient(135deg, #BFA272 50%, transparent 50%);
+      background-image: linear-gradient(45deg, transparent 50%, var(--accent) 50%), linear-gradient(135deg, var(--accent) 50%, transparent 50%);
       background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 12px) calc(50% - 3px);
       background-size: 6px 6px, 6px 6px;
       background-repeat: no-repeat;
@@ -479,19 +827,18 @@
     }
 
     #searchForm input::placeholder {
-      color: #A79E8F;
+      color: var(--text-muted);
       opacity: 1;
     }
 
     #searchForm select:focus,
     #searchForm input[type="text"]:focus {
       outline: none;
-      border-color: #BFA272;
-      box-shadow: 0 0 0 4px rgba(191,162,114,0.09);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(191, 162, 114, 0.09);
       transform: translateY(-1px);
     }
 
-    /* Allow grouping fields horizontally on larger screens */
     #searchFields {
       display: flex;
       gap: 0.8rem;
@@ -500,17 +847,15 @@
       align-items: center;
     }
 
-    #searchFields > * { /* controls inside searchFields */
+    #searchFields>* {
       margin: 0.2rem 0;
     }
 
-    /* small modifier for compact selects (like the label select) */
     #searchFields .compact,
     #searchForm .compact {
       max-width: 170px;
     }
 
-    /* Adjust the submit button alignment */
     #searchForm button {
       margin-top: 0.4rem;
       align-self: flex-start;
@@ -518,25 +863,103 @@
       border-radius: 40px;
     }
 
+    /* ===== RESULT CARDS ===== */
+    .result-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--accent-dim);
+      padding: 1.25rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .result-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.6);
+    }
+
+    .result-header {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      font-size: 1.05rem;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.45rem 1.25rem;
+    }
+
+    .result-row {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+    }
+
+    .result-row.hidden {
+      display: none !important;
+    }
+
+    .result-key {
+      color: var(--accent);
+      font-weight: 700;
+      min-width: 120px;
+      flex: 0 0 140px;
+      font-size: 0.95rem;
+    }
+
+    .result-val {
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      white-space: normal;
+      word-break: break-word;
+    }
+
     @media (max-width: 680px) {
-      #searchForm select,
-      #searchForm input[type="text"] {
-        max-width: 100%;
+      .result-grid {
+        grid-template-columns: 1fr;
       }
-      #searchForm button {
-        width: 100%;
-        max-width: 360px;
+
+      .result-key {
+        min-width: 100px;
+        flex: 0 0 120px;
       }
-      #searchFields {
-        flex-direction: column;
-        align-items: stretch;
-      }
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg-primary);
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-bright);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 30px rgba(191, 162, 114, 0.5);
     }
 
     .btn-secondary {
       background: transparent;
-      color: #BFA272;
-      border: 2px solid #BFA272;
+      color: var(--accent);
+      border: 2px solid var(--accent);
     }
 
     .btn-secondary:hover {
@@ -544,26 +967,75 @@
       transform: translateY(-3px);
     }
 
-    /* Quote */
-    .quote {
-      font-family: 'Lora', serif;
-      font-style: italic;
-      font-size: clamp(1.3rem, 3vw, 2rem);
-      color: #B7B1A8;
-      border-left: 4px solid #BFA272;
-      padding-left: 2rem;
-      margin: 3rem 0;
+    .cta-section {
+      background: linear-gradient(135deg, rgba(19, 22, 30, 0.65) 0%, rgba(13, 15, 20, 0.65) 100%);
+      text-align: center;
     }
 
-    /* Footer */
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    /* ===== SOURCE CITATIONS ===== */
+    .sources {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .sources h4 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.8rem;
+    }
+
+    .sources ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sources li {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .sources li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    .sources a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .sources a:hover {
+      color: var(--accent);
+    }
+
+    /* ===== FOOTER ===== */
     footer {
-      background: #2d2d2d;
+      background: var(--bg-secondary);
       padding: 3rem 2rem;
-      color: #B7B1A8;
-      border-top: 1px solid rgba(191, 162, 114, 0.2);
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border-accent);
     }
 
-    /* Footer layout: logo left, team info right on wide screens */
     .footer-inner {
       display: flex;
       align-items: center;
@@ -572,7 +1044,6 @@
       margin: 0 auto;
       width: 100%;
       padding: 0 0.5rem;
-      box-sizing: border-box;
       justify-content: space-between;
     }
 
@@ -581,21 +1052,22 @@
       width: 100%;
       height: auto;
       display: block;
-      filter: none;
       opacity: 0.95;
       transition: transform 0.18s ease, opacity 0.18s ease;
     }
-    .footer-logo a { display: inline-block; }
-    .footer-logo a:hover .footer-logo img,
-    .footer-logo a:focus .footer-logo img {
+
+    .footer-logo a {
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .footer-logo a:hover img {
       transform: translateY(-4px) scale(1.02);
       opacity: 1;
     }
-    .footer-logo a { cursor: pointer; }
 
-    /* Right column with team name and details */
     .footer-right {
-      color: #B7B1A8;
+      color: var(--text-secondary);
       font-size: 0.95rem;
       line-height: 1.6;
       text-align: right;
@@ -604,7 +1076,7 @@
     }
 
     .team-name {
-      color: #BFA272;
+      color: var(--accent);
       font-weight: 700;
       display: block;
       margin-bottom: 0.5rem;
@@ -612,15 +1084,14 @@
     }
 
     .team-list {
-      color: #EDE6DB;
+      color: var(--text-primary);
       opacity: 0.95;
       margin-bottom: 0.6rem;
-      white-space: normal;
     }
 
     .footer-meta {
       margin-top: .4rem;
-      color: #B7B1A8;
+      color: var(--text-secondary);
       font-size: 0.92rem;
       line-height: 1.5;
     }
@@ -631,9 +1102,11 @@
         align-items: center;
         text-align: center;
       }
+
       .footer-logo img {
         max-width: 120px;
       }
+
       .footer-right {
         text-align: center;
         min-width: 0;
@@ -641,7 +1114,7 @@
       }
     }
 
-    /* Responsive */
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
       section {
         padding: 4rem 1.5rem;
@@ -660,20 +1133,33 @@
         width: 100%;
         max-width: 300px;
       }
-    }
 
-    /* Progress bar */
-    .progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 4px;
-      background: #BFA272;
-      z-index: 1000;
-      transition: width 0.1s ease;
+      .profile-card {
+        padding: 1.5rem;
+      }
+
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #searchForm select,
+      #searchForm input[type="text"] {
+        max-width: 100%;
+      }
+
+      #searchForm button {
+        width: 100%;
+        max-width: 360px;
+      }
+
+      #searchFields {
+        flex-direction: column;
+        align-items: stretch;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="progress-bar" id="progressBar"></div>
 
@@ -685,92 +1171,414 @@
   <div class="bg-decoration bg-eye">👁️</div>
   <div class="bg-decoration bg-network">🌐</div>
 
-  <!-- Hero Section -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- HERO + FASE 1: PERFIL DEL INCIDENTE                   -->
+  <!-- ═══════════════════════════════════════════════════════ -->
   <div class="hero">
     <div class="hero-content">
       <img class="hero-logo" src="moodboard/images/logo.png" alt="Datos Sensibles Logo">
-      <p>La historia de una brecha que nos involucra a todos</p>
+      <div class="hero-subtitle">Unidad 4 · Implementación de una Nube Segura</div>
+      <h1>Análisis Crítico de un Incidente Cloud</h1>
+      <p>Filtración del Padrón Electoral del INE — MongoDB en AWS sin autenticación</p>
     </div>
     <div class="scroll-indicator">
       <span></span>
     </div>
   </div>
 
-  <!-- Introduction -->
-  <section>
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- FASE 1: PERFIL DEL INCIDENTE                           -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section id="fase1">
     <div class="section-content">
-      <p>En un mundo cada vez más conectado, nuestros datos personales viajan constantemente a través de sistemas, aplicaciones y servidores. Confiamos en que estarán seguros, protegidos por capas de seguridad digital.</p>
-      <p>Pero a veces, esa confianza se rompe.</p>
+      <div class="phase-badge"><span class="phase-num">1</span> Perfil del Incidente</div>
+      <h2>Identificación del Caso</h2>
+      <p>El punto de partida de todo análisis: documentar con precisión qué pasó, dónde, cómo y por qué importa.</p>
+
+      <div class="profile-card">
+        <div class="profile-id">ID: INC-2016-INE-MX-001 &nbsp;·&nbsp; PROCESO: Análisis Cloud Security</div>
+        <div class="profile-grid">
+          <div class="profile-field">
+            <span class="field-label">Nombre del Incidente</span>
+            <span class="field-value">Filtración del Padrón Electoral del INE</span>
+          </div>
+          <div class="profile-field">
+            <span class="field-label">Período</span>
+            <span class="field-value mono">Septiembre 2015 — Abril 2016</span>
+          </div>
+          <div class="profile-field">
+            <span class="field-label">Víctima</span>
+            <span class="field-value">Instituto Nacional Electoral (INE) / 93.4 millones de ciudadanos mexicanos</span>
+          </div>
+          <div class="profile-field">
+            <span class="field-label">Plataforma Cloud</span>
+            <span class="field-value">Amazon Web Services — EC2 Instance</span>
+          </div>
+          <div class="profile-field">
+            <span class="field-label">Tecnología Comprometida</span>
+            <span class="field-value">MongoDB (sin autenticación, configuración por defecto)</span>
+          </div>
+          <div class="profile-field">
+            <span class="field-label">Descubierto por</span>
+            <span class="field-value">Chris Vickery, investigador de seguridad (vía Shodan)</span>
+          </div>
+          <div class="profile-field">
+            <span class="field-label">Contexto</span>
+            <span class="field-value">Copia del padrón electoral entregada a partido político (Movimiento Ciudadano),
+              subida a servidor cloud sin protección</span>
+          </div>
+          <div class="profile-field">
+            <span class="field-label">Fuentes</span>
+            <span class="field-value mono">SecurityWeek · CSO Online · Help Net Security · InformationWeek</span>
+          </div>
+        </div>
+      </div>
+
       <div class="quote">
-        "Una brecha de datos no es solo un problema técnico, es una violación de la confianza y la privacidad de miles de personas."
+        "Una base de datos con la información personal de 93.4 millones de votantes mexicanos fue encontrada expuesta en
+        un servidor de Amazon, accesible para cualquier persona en internet — sin contraseña, sin cifrado, sin
+        monitoreo."
       </div>
     </div>
   </section>
 
-  <!-- The Breach -->
-  <section class="section-alt">
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- CONTEXTO Y NARRATIVA                                   -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section-alt" id="contexto">
     <div class="section-content">
-      <h2>Brecha de datos INE 2016</h2>
-      <p>Todo comenzó con una vulnerabilidad aparentemente insignificante.</p>
-      
+      <h2>Contexto: La Cadena de Custodia Rota</h2>
+      <p>Por ley, el INE está obligado a proporcionar copias del padrón electoral a los partidos políticos para
+        verificación. Esta práctica, diseñada para transparencia democrática, se convirtió en el eslabón más débil de la
+        cadena de seguridad.</p>
+      <p>Un actor asociado al partido político <strong>Movimiento Ciudadano</strong> tomó la decisión de migrar esta
+        base de datos sensible a la nube — específicamente a una instancia de <strong>Amazon EC2</strong> — utilizando
+        <strong>MongoDB</strong> como motor de base de datos.</p>
+      <p>El problema crítico: la instalación de MongoDB se dejó con su configuración por defecto, que en versiones
+        anteriores <strong>no requería autenticación</strong> y escuchaba en todas las interfaces de red. El resultado
+        fue una base de datos de 132 GB con la información más sensible de casi 100 millones de ciudadanos,
+        completamente accesible desde internet público.</p>
+
+      <div class="quote">
+        "La migración a la nube sin controles de seguridad convirtió un ejercicio de transparencia democrática en la
+        mayor filtración de datos personales en la historia de México."
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- FASE 2: VECTOR DE ATAQUE                               -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section id="fase2">
+    <div class="section-content">
+      <div class="phase-badge"><span class="phase-num">2</span> Vector de Ataque</div>
+      <h2>¿Por Dónde Entró la Amenaza?</h2>
+      <p>El vector principal fue la <strong>mala configuración del servicio cloud</strong>: una base de datos MongoDB
+        desplegada en AWS EC2 sin autenticación, sin firewall, y sin segmentación de red. No fue un ataque sofisticado —
+        fue negligencia operativa en la nube.</p>
+
+      <h3>Mapa de Vulnerabilidades Cloud</h3>
+      <div class="vuln-map">
+        <div class="vuln-item applies">
+          <span class="vuln-icon">✅</span>
+          <span class="vuln-text">Base de datos pública sin autenticación (MongoDB default)</span>
+        </div>
+        <div class="vuln-item applies">
+          <span class="vuln-icon">✅</span>
+          <span class="vuln-text">Falta de segmentación de red (puerto abierto al mundo)</span>
+        </div>
+        <div class="vuln-item applies">
+          <span class="vuln-icon">✅</span>
+          <span class="vuln-text">Mala configuración de permisos en la instancia cloud</span>
+        </div>
+        <div class="vuln-item applies">
+          <span class="vuln-icon">✅</span>
+          <span class="vuln-text">Error humano — migración sin revisión de seguridad</span>
+        </div>
+        <div class="vuln-item applies">
+          <span class="vuln-icon">✅</span>
+          <span class="vuln-text">Falta de monitoreo — 190 días sin detección</span>
+        </div>
+        <div class="vuln-item not-applies">
+          <span class="vuln-icon">❌</span>
+          <span class="vuln-text">API expuesta (no aplica — acceso directo a DB)</span>
+        </div>
+        <div class="vuln-item not-applies">
+          <span class="vuln-icon">❌</span>
+          <span class="vuln-text">Credenciales comprometidas (no había credenciales)</span>
+        </div>
+        <div class="vuln-item not-applies">
+          <span class="vuln-icon">❌</span>
+          <span class="vuln-text">Ingeniería social (no fue necesaria)</span>
+        </div>
+        <div class="vuln-item not-applies">
+          <span class="vuln-icon">❌</span>
+          <span class="vuln-text">Ransomware / DDoS (no aplica)</span>
+        </div>
+      </div>
+
+      <h3>Línea de Tiempo del Incidente</h3>
       <div class="timeline">
         <div class="timeline-item">
-          <div class="timeline-date">DÍA 1</div>
-          
-          <p>Los atacantes identifican una vulnerabilidad en un sistema crítico. La puerta está entreabierta.</p>
+          <div class="timeline-date">SEPTIEMBRE 2015</div>
+          <p>La base de datos MongoDB con el padrón electoral es subida a una instancia de AWS EC2 sin configurar
+            autenticación ni restricciones de red. La puerta queda completamente abierta.</p>
         </div>
-        
         <div class="timeline-item">
-          <div class="timeline-date">DÍA 15</div>
-          
-          <p>Sin que nadie lo note, los datos comienzan a filtrarse. Miles de registros personales quedan expuestos.</p>
+          <div class="timeline-date">14 DE ABRIL, 2016</div>
+          <p>El investigador de seguridad Chris Vickery descubre la base de datos expuesta utilizando
+            <strong>Shodan</strong>, un motor de búsqueda para dispositivos conectados a internet. Encuentra 132 GB de
+            datos accesibles sin contraseña.</p>
         </div>
-        
         <div class="timeline-item">
-          <div class="timeline-date">DÍA 45</div>
-          
-          <p>Un equipo de seguridad detecta actividad anómala. Ya es demasiado tarde para algunos usuarios.</p>
+          <div class="timeline-date">14-21 DE ABRIL, 2016</div>
+          <p>Vickery intenta contactar a las autoridades: el Departamento de Estado de EE.UU., la Embajada de México en
+            Washington, y al INE directamente. Durante una semana, la base de datos sigue expuesta.</p>
         </div>
-        
         <div class="timeline-item">
-          <div class="timeline-date">DÍA 60</div>
-          
-          <p>La noticia se hace pública. Miles de personas descubren que su información privada está en manos equivocadas.</p>
+          <div class="timeline-date">21 DE ABRIL, 2016</div>
+          <p>Amazon Web Services es notificado directamente sobre la instancia comprometida. AWS actúa como
+            intermediario para contactar al propietario de la cuenta.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">22 DE ABRIL, 2016</div>
+          <p>La base de datos es finalmente desconectada tras la coordinación entre AWS, el INE y las autoridades. Han
+            pasado aproximadamente <strong>190 días</strong> desde la exposición inicial.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Impact -->
-  <section>
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- FASE 3: ANÁLISIS DE IMPACTO                            -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section-alt" id="fase3">
     <div class="section-content">
-      <h2>El Impacto Real</h2>
-      <p>Detrás de cada estadística hay una persona real.</p>
-      
+      <div class="phase-badge"><span class="phase-num">3</span> Análisis de Impacto</div>
+      <h2>Consecuencias del Incidente</h2>
+      <p>Detrás de cada estadística hay una persona real cuya información más sensible quedó expuesta.</p>
+
       <div class="stats-grid">
         <div class="stat-card">
-          <span class="stat-number">97 Millones</span>
-          <span class="stat-label">Personas afectadas</span>
+          <span class="stat-number">93.4M</span>
+          <span class="stat-label">Registros de votantes expuestos</span>
         </div>
         <div class="stat-card">
-          <span class="stat-number">45</span>
-          <span class="stat-label">Días sin detectar</span>
+          <span class="stat-number">132 GB</span>
+          <span class="stat-label">Tamaño de la base de datos</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">~190</span>
+          <span class="stat-label">Días de exposición sin detectar</span>
         </div>
         <div class="stat-card">
           <span class="stat-number">100%</span>
-          <span class="stat-label">Evitable</span>
+          <span class="stat-label">Evitable con configuración básica</span>
         </div>
       </div>
 
-      <p>Las consecuencias van más allá de los números. Identidades robadas, cuentas comprometidas, pérdida de confianza en sistemas digitales. El daño emocional y financiero puede durar años.</p>
+      <h3>Panel de Evaluación de Impacto</h3>
+      <div class="impact-questions">
+        <div class="impact-q">
+          <div class="q-label">¿Qué se perdió o comprometió?</div>
+          <p class="q-answer">Nombres completos, direcciones, fechas de nacimiento, nombres de padres, ocupaciones, CURP
+            y credenciales de elector de 93.4 millones de ciudadanos mexicanos.</p>
+        </div>
+        <div class="impact-q">
+          <div class="q-label">¿Hubo fuga de datos?</div>
+          <p class="q-answer">Sí. La base de datos estuvo accesible públicamente durante aproximadamente 190 días. No se
+            puede determinar cuántos actores accedieron a los datos durante ese período.</p>
+        </div>
+        <div class="impact-q">
+          <div class="q-label">¿Se afectó la disponibilidad del servicio?</div>
+          <p class="q-answer">No directamente. Los sistemas del INE siguieron operando. Sin embargo, la confianza
+            pública en la seguridad del sistema electoral fue severamente dañada.</p>
+        </div>
+        <div class="impact-q">
+          <div class="q-label">¿Hubo sanciones o demandas?</div>
+          <p class="q-answer">El INE presentó una denuncia penal contra responsables desconocidos. Se abrieron
+            investigaciones sobre la cadena de custodia de los datos. El impacto reputacional fue significativo.</p>
+        </div>
+      </div>
+
+      <p style="margin-top:2rem;">Las consecuencias van más allá de los números: identidades expuestas al robo, posible
+        manipulación electoral, y una pérdida profunda de confianza en las instituciones encargadas de proteger los
+        datos más sensibles de la nación.</p>
     </div>
   </section>
 
-  <!-- Prevention -->
-  <section class="section-alt" id="prevention">
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- FASE 4: EVALUACIÓN DE LA RESPUESTA                     -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section id="fase4">
     <div class="section-content">
-      <h2>Datos Sensibles<h2></h2>
-      <p>Consulta la base de datos vulnerada <p></p>
+      <div class="phase-badge"><span class="phase-num">4</span> Evaluación de la Respuesta</div>
+      <h2>¿Cómo Respondió la Organización?</h2>
+      <p>Evaluar la respuesta es tan importante como analizar el ataque. ¿Se actuó con rapidez, transparencia y
+        eficacia?</p>
+
+      <h3>Espectro de Respuesta a Incidentes</h3>
+      <div class="response-spectrum" id="responseSpectrum">
+        <div class="spectrum-row">
+          <span class="spectrum-label">Detección</span>
+          <div class="spectrum-bar-wrap">
+            <div class="spectrum-bar bad" data-width="20"></div>
+          </div>
+          <span class="spectrum-rating bad">⚠️ TARDÍA — 190 días, descubierta por tercero</span>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Contención</span>
+          <div class="spectrum-bar-wrap">
+            <div class="spectrum-bar good" data-width="75"></div>
+          </div>
+          <span class="spectrum-rating good">✅ RÁPIDA — 8 días tras descubrimiento</span>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Recuperación</span>
+          <div class="spectrum-bar-wrap">
+            <div class="spectrum-bar warn" data-width="40"></div>
+          </div>
+          <span class="spectrum-rating warn">⚠️ PARCIAL — datos ya expuestos, irrecuperable</span>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Forense</span>
+          <div class="spectrum-bar-wrap">
+            <div class="spectrum-bar warn" data-width="35"></div>
+          </div>
+          <span class="spectrum-rating warn">⚠️ LIMITADA — denuncia penal sin resolución pública</span>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Comunicación</span>
+          <div class="spectrum-bar-wrap">
+            <div class="spectrum-bar bad" data-width="25"></div>
+          </div>
+          <span class="spectrum-rating bad">❌ DEFICIENTE — INE desvió culpa al partido político</span>
+        </div>
+      </div>
+
+      <h3>Matriz de Diagnóstico: Vector vs. Control</h3>
+      <table class="diagnosis-matrix">
+        <thead>
+          <tr>
+            <th>Vector Identificado</th>
+            <th>Control que lo Habría Prevenido</th>
+            <th>¿Existía?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>MongoDB sin autenticación</td>
+            <td>Habilitar autenticación obligatoria en la configuración de MongoDB</td>
+            <td class="check-no">✗ NO</td>
+          </tr>
+          <tr>
+            <td>Puerto 27017 abierto a internet</td>
+            <td>Security Groups de AWS restringiendo acceso por IP/VPC</td>
+            <td class="check-no">✗ NO</td>
+          </tr>
+          <tr>
+            <td>Datos sin cifrar en reposo</td>
+            <td>Cifrado AES-256 en disco (EBS Encryption)</td>
+            <td class="check-no">✗ NO</td>
+          </tr>
+          <tr>
+            <td>Sin monitoreo de acceso</td>
+            <td>AWS CloudTrail + CloudWatch Alerts + SIEM</td>
+            <td class="check-no">✗ NO</td>
+          </tr>
+          <tr>
+            <td>Migración sin auditoría</td>
+            <td>Proceso formal de revisión de seguridad pre-deployment</td>
+            <td class="check-no">✗ NO</td>
+          </tr>
+          <tr>
+            <td>Cadena de custodia rota</td>
+            <td>DLP (Data Loss Prevention) + acuerdos contractuales de seguridad</td>
+            <td class="check-no">✗ NO</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- FASE 5: LECCIONES APRENDIDAS + PROYECTO FINAL          -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section-alt" id="fase5">
+    <div class="section-content">
+      <div class="phase-badge"><span class="phase-num">5</span> Lecciones Aprendidas</div>
+      <h2>El Puente al Proyecto Final</h2>
+      <p>Cada vulnerabilidad del caso INE tiene una contramedida directa que hemos implementado en la arquitectura de
+        nuestro proyecto <strong>Datos Sensibles</strong>.</p>
+
+      <div class="lessons-grid">
+        <div class="lesson-card">
+          <div class="lesson-icon">🔐</div>
+          <div class="lesson-title">Autenticación Obligatoria</div>
+          <p class="lesson-desc">A diferencia del MongoDB expuesto, nuestro proyecto implementa autenticación con
+            sesiones Flask. Nadie accede a la base de datos sin credenciales válidas.</p>
+        </div>
+        <div class="lesson-card">
+          <div class="lesson-icon">🛡️</div>
+          <div class="lesson-title">Control de Acceso a Datos</div>
+          <p class="lesson-desc">Implementamos un sistema de registros bloqueados (BLOCKED_FULL_NAMES,
+            BLOCKED_IDENTIFIERS) que filtra información sensible antes de mostrarla al usuario.</p>
+        </div>
+        <div class="lesson-card">
+          <div class="lesson-icon">🌐</div>
+          <div class="lesson-title">CORS Configurado</div>
+          <p class="lesson-desc">Flask-CORS está configurado para controlar qué orígenes pueden acceder a la API,
+            previniendo acceso no autorizado desde dominios externos.</p>
+        </div>
+        <div class="lesson-card">
+          <div class="lesson-icon">🔑</div>
+          <div class="lesson-title">Gestión de Secretos</div>
+          <p class="lesson-desc">Las credenciales se manejan mediante variables de entorno (AUTH_USER, AUTH_PASSWORD,
+            FLASK_SECRET), nunca hardcodeadas en el código fuente.</p>
+        </div>
+        <div class="lesson-card">
+          <div class="lesson-icon">📋</div>
+          <div class="lesson-title">Tokens de Sesión Únicos</div>
+          <p class="lesson-desc">Cada sesión autenticada genera un page_token de un solo uso, previniendo replay attacks
+            y acceso no autorizado a páginas protegidas.</p>
+        </div>
+        <div class="lesson-card">
+          <div class="lesson-icon">☁️</div>
+          <div class="lesson-title">Deployment Seguro en Cloud</div>
+          <p class="lesson-desc">El proyecto se despliega en Render con configuración segura: variables de entorno
+            gestionadas, HTTPS forzado, y base de datos PostgreSQL/Neon con autenticación.</p>
+        </div>
+      </div>
+
+      <div class="sources">
+        <h4>Fuentes Consultadas</h4>
+        <ul>
+          <li><a href="https://www.securityweek.com" target="_blank" rel="noopener">SecurityWeek — "93.4 Million Mexican
+              Voter Records Found on Amazon Server"</a></li>
+          <li><a href="https://www.csoonline.com" target="_blank" rel="noopener">CSO Online — "Mexico voter data exposed
+              on misconfigured AWS"</a></li>
+          <li><a href="https://www.helpnetsecurity.com" target="_blank" rel="noopener">Help Net Security — "Researcher
+              finds personal records of 93.4M Mexican voters"</a></li>
+          <li><a href="https://www.informationweek.com" target="_blank" rel="noopener">InformationWeek — "Mexican
+              Electoral Institute Data Breach Analysis"</a></li>
+          <li><a href="https://www.vice.com" target="_blank" rel="noopener">Vice/Motherboard — "A Database of 93.4M
+              Mexican Voter Records Found on Amazon"</a></li>
+          <li><a href="https://www.cybersecurity-help.cz" target="_blank" rel="noopener">Cybersecurity Help — "INE
+              MongoDB AWS Breach Technical Analysis"</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- DEMOSTRACIÓN: DATOS SENSIBLES (BÚSQUEDA)               -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section id="demo">
+    <div class="section-content">
+      <h2>Demostración: Base de Datos Vulnerada</h2>
+      <p>Como parte del proyecto, esta sección permite consultar un subconjunto de la base de datos filtrada,
+        demostrando la gravedad real del incidente y la importancia de proteger datos sensibles.</p>
+
       <form id="searchForm" style="margin-bottom:2rem;">
         <label for="searchType">Tipo de búsqueda:</label>
         <select id="searchType" name="searchType">
@@ -785,41 +1593,52 @@
     </div>
   </section>
 
-  <!-- Call to Action -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- CTA                                                     -->
+  <!-- ═══════════════════════════════════════════════════════ -->
   <section class="cta-section">
     <div class="section-content">
       <h2>Protege Tu Información</h2>
-      <p>No esperes a ser víctima de una brecha de datos. Toma acción hoy para proteger tu información personal y la de los demás.</p>
-      
+      <p>No esperes a ser víctima de una brecha de datos. La seguridad en la nube comienza con configuraciones básicas:
+        autenticación, cifrado, monitoreo y principio de mínimo privilegio.</p>
       <div class="cta-buttons">
-  <a href="https://www.cisa.gov/" class="btn btn-primary" target="_blank" rel="noopener">Aprende Más</a>
-  <a href="https://www.cybersecurityguide.org/resources/" class="btn btn-secondary" target="_blank" rel="noopener">Recursos de Seguridad</a>
+        <a href="https://www.cisa.gov/" class="btn btn-primary" target="_blank" rel="noopener">CISA — Recursos</a>
+        <a href="https://aws.amazon.com/security/security-learning/" class="btn btn-secondary" target="_blank"
+          rel="noopener">AWS Security Best Practices</a>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- FOOTER                                                  -->
+  <!-- ═══════════════════════════════════════════════════════ -->
   <footer>
     <div class="footer-inner">
       <div class="footer-logo">
-        <a href="https://cugdl.udg.mx/" target="_blank" rel="noopener noreferrer" title="Sitio CUGDL" aria-label="Ir al sitio del Centro Universitario de Guadalajara">
+        <a href="https://cugdl.udg.mx/" target="_blank" rel="noopener noreferrer" title="Sitio CUGDL"
+          aria-label="Ir al sitio del Centro Universitario de Guadalajara">
           <img src="moodboard/images/CUGDL_LOGO2.png" alt="CUGDL Logo">
         </a>
       </div>
       <div class="footer-right">
-        <span class="team-name">Equipo de Ciberseguridad</span>
-        <div class="team-list">Carlos Alberto Aceves • Daniel Alejandro García Laguna • Gabriela Verónica Ramírez Pulido<br>
-        Abelardo Serrano Prado • Mario De Jesús Martínez Castro • Ateno Hernandez Gerson • Mendex Duran Jesus • Gonzales Becerra Luis Gilberto
-      • Cortes Espiritu Adrian </div>
-        <div class="footer-meta">Curso: Storytelling • Profesor: Prof. Víctor Magaña<br>
-        Centro Universitario de Guadalajara, Universidad de Guadalajara<br>
-        15 de Noviembre, 2025</div>
+        <span class="team-name">Equipo</span>
+        <div class="team-list">Carlos Aceves • Gabriela Pulido • Lourdes Alvarez</div>
+        <div class="footer-meta">Curso: La nube computacional y la ciberseguridad<br>
+          Centro Universitario de Guadalajara, Universidad de Guadalajara<br>
+          22 de Mayo, 2026 — Trabajo 4.1: Análisis Crítico de un Caso de Estudio</div>
+        <div class="footer-meta" style="margin-top: 1rem; font-style: italic; color: var(--accent);">
+          Agradecimiento especial a la <strong>Dra. Marisol Flores Guerrero</strong> por su guía y enseñanza a lo largo
+          de este curso. 🙏
+        </div>
       </div>
     </div>
   </footer>
 
+
   <script>
-    // --- Prevention AJAX UI ---
+    // ═══════════════════════════════════════════════════════
+    // SEARCH FORM (preserved from original)
+    // ═══════════════════════════════════════════════════════
     const searchTypeSelect = document.getElementById('searchType');
     const searchFieldsDiv = document.getElementById('searchFields');
     const searchForm = document.getElementById('searchForm');
@@ -829,7 +1648,6 @@
       "NOMBRE", "PATERNO", "MATERNO", "FECNAC", "CALLE", "COLONIA", "CURP"
     ];
 
-    // Show-only list: limit the displayed fields to this ordered list
     const SHOW_FIELDS = [
       "NOMBRE", "PATERNO", "MATERNO", "FECNAC", "CALLE", "COLONIA", "CURP"
     ];
@@ -862,7 +1680,7 @@
     });
     renderFields(searchTypeSelect.value);
 
-    searchForm.addEventListener('submit', async function(e) {
+    searchForm.addEventListener('submit', async function (e) {
       e.preventDefault();
       const type = searchTypeSelect.value;
       let payload = { type };
@@ -886,15 +1704,12 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-
-        // Better error handling: if server returns a non-2xx code, show details
         if (!res.ok) {
           const text = await res.text();
           console.error('API returned error', res.status, res.statusText, text);
-          searchResultsDiv.innerHTML = `<p>Error del servidor: ${res.status} ${res.statusText}</p><pre style="white-space:pre-wrap;color:#bfa272;">${text.slice(0,1000)}</pre>`;
+          searchResultsDiv.innerHTML = `<p>Error del servidor: ${res.status} ${res.statusText}</p><pre style="white-space:pre-wrap;color:var(--accent);">${text.slice(0, 1000)}</pre>`;
           return;
         }
-
         const results = await res.json();
         if (!Array.isArray(results) || results.length === 0) {
           searchResultsDiv.innerHTML = '<p>No se encontraron resultados.</p>';
@@ -902,15 +1717,14 @@
           let html = `<p>Resultados encontrados: ${results.length}</p>`;
           results.slice(0, 10).forEach((client, idx) => {
             html += `<div class="result-card">`;
-            html += `<div class="result-header">Resultado #${idx+1}</div>`;
+            html += `<div class="result-header">Resultado #${idx + 1}</div>`;
             html += `<div class="result-grid">`;
-            // Render only the fields listed in SHOW_FIELDS (keeps ordering predictable)
             SHOW_FIELDS.forEach(lbl => {
               const safeVal = (client[lbl] || 'N/A');
               html += `<div class="result-row"><span class="result-key">${lbl}:</span><span class="result-val">${safeVal}</span></div>`;
             });
-            html += `</div>`; // result-grid
-            html += `</div>`; // result-card
+            html += `</div>`;
+            html += `</div>`;
           });
           if (results.length > 10) html += `<p>Mostrando los primeros 10 resultados.</p>`;
           searchResultsDiv.innerHTML = html;
@@ -921,7 +1735,10 @@
         searchResultsDiv.innerHTML = `<p>Error al consultar la base de datos: ${msg}</p>`;
       }
     });
-    // Progress bar
+
+    // ═══════════════════════════════════════════════════════
+    // PROGRESS BAR
+    // ═══════════════════════════════════════════════════════
     window.addEventListener('scroll', () => {
       const h = document.documentElement;
       const b = document.body;
@@ -931,15 +1748,15 @@
       document.getElementById('progressBar').style.width = percent + '%';
     });
 
-    // Animated background elements based on scroll
+    // ═══════════════════════════════════════════════════════
+    // BACKGROUND DECORATIONS
+    // ═══════════════════════════════════════════════════════
     window.addEventListener('scroll', () => {
       const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
       const decorations = document.querySelectorAll('.bg-decoration');
-      
       decorations.forEach((decoration, index) => {
-        const startPercent = (index * 16.66); // Each appears at different scroll points
+        const startPercent = (index * 16.66);
         const endPercent = startPercent + 20;
-        
         if (scrollPercentage >= startPercent && scrollPercentage <= endPercent) {
           decoration.classList.add('active');
         } else {
@@ -948,8 +1765,9 @@
       });
     });
 
-    // Intersection Observer for fade-in and slide-up animations
-    // For section content and stat cards: instant animation
+    // ═══════════════════════════════════════════════════════
+    // INTERSECTION OBSERVER — FADE IN ANIMATIONS
+    // ═══════════════════════════════════════════════════════
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         entry.target.classList.toggle('visible', entry.isIntersecting);
@@ -963,10 +1781,13 @@
       observer.observe(card);
     });
 
-    // Timeline dots: illuminate one by one with 2s delay between each
+    // ═══════════════════════════════════════════════════════
+    // TIMELINE DOTS — SEQUENTIAL ILLUMINATION
+    // ═══════════════════════════════════════════════════════
     const timelineItems = Array.from(document.querySelectorAll('.timeline-item'));
     let dotsOn = false;
     let resetTimeout = null;
+
     function illuminateDotsSequentially() {
       if (dotsOn) return;
       dotsOn = true;
@@ -975,13 +1796,13 @@
           item.classList.add('visible');
         }, idx * 2000);
       });
-      // Reset all dots after 8 seconds
       if (resetTimeout) clearTimeout(resetTimeout);
       resetTimeout = setTimeout(() => {
         timelineItems.forEach(item => item.classList.remove('visible'));
         dotsOn = false;
-      }, 8000);
+      }, timelineItems.length * 2000 + 4000);
     }
+
     function turnOffDotsSequentially() {
       if (!dotsOn) return;
       dotsOn = false;
@@ -989,11 +1810,10 @@
       timelineItems.forEach((item, idx) => {
         setTimeout(() => {
           item.classList.remove('visible');
-        }, idx * 2000);
+        }, idx * 500);
       });
     }
 
-    // Observe the timeline container
     const timeline = document.querySelector('.timeline');
     if (timeline) {
       const timelineObserver = new IntersectionObserver((entries) => {
@@ -1008,7 +1828,35 @@
       timelineObserver.observe(timeline);
     }
 
-    // Smooth scroll for anchor links
+    // ═══════════════════════════════════════════════════════
+    // RESPONSE SPECTRUM — ANIMATED BARS
+    // ═══════════════════════════════════════════════════════
+    const spectrumObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const bars = entry.target.querySelectorAll('.spectrum-bar');
+          bars.forEach((bar, idx) => {
+            setTimeout(() => {
+              bar.style.width = bar.dataset.width + '%';
+            }, idx * 200);
+          });
+        } else {
+          const bars = entry.target.querySelectorAll('.spectrum-bar');
+          bars.forEach(bar => {
+            bar.style.width = '0%';
+          });
+        }
+      });
+    }, { threshold: 0.2 });
+
+    const responseSpectrum = document.getElementById('responseSpectrum');
+    if (responseSpectrum) {
+      spectrumObserver.observe(responseSpectrum);
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // SMOOTH SCROLL FOR ANCHOR LINKS
+    // ═══════════════════════════════════════════════════════
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -1020,4 +1868,5 @@
     });
   </script>
 </body>
+
 </html>
