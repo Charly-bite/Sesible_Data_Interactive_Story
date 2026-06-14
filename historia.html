@@ -8,7 +8,7 @@
   <meta name="description"
     content="Análisis crítico de la filtración del Padrón Electoral del INE (2016) como caso de estudio de seguridad en la nube. Unidad 4: Implementación de una nube segura.">
   <link
-    href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Montserrat:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Montserrat:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;800&display=swap"
     rel="stylesheet">
   <style>
     /* ===== DESIGN TOKENS ===== */
@@ -38,7 +38,7 @@
       --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45);
       --shadow-glow: 0 0 40px rgba(191, 162, 114, 0.12);
       --font-body: 'Lora', serif;
-      --font-heading: 'Montserrat', sans-serif;
+      --font-heading: 'Outfit', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
 
@@ -803,9 +803,11 @@
 
     #searchForm select,
     #searchForm input[type="text"] {
-      background: var(--bg-card);
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       color: var(--text-primary);
-      border: 1px solid var(--accent-dim);
+      border: 1px solid var(--border-accent);
       padding: 0.6rem 0.9rem;
       border-radius: 10px;
       font-family: var(--font-heading);
